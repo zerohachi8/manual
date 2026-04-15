@@ -310,15 +310,30 @@ body {
 
 <!-- ADMIN MODAL -->
 <div id="admin-mbg" class="mbg">
-  <div class="mbox" style="width:430px">
+  <div class="mbox" style="width:460px">
     <h3>⚙ ユーザー管理</h3>
-    <p style="font-size:11px;color:var(--muted);margin-bottom:12px">許可するGmailアドレスを管理します。最初にログインした方が管理者です。</p>
+
+    <!-- ドメイン一括許可 -->
+    <p style="font-size:11px;font-weight:bold;color:var(--secondary);margin-bottom:6px">📌 ドメイン一括許可</p>
+    <p style="font-size:11px;color:var(--muted);margin-bottom:8px">このドメインのGoogleアカウント全員を許可します（例: marugotoinc.co.jp）</p>
+    <div id="domain-list"></div>
+    <div class="add-form">
+      <input type="text" id="new-domain" placeholder="例: marugotoinc.co.jp">
+      <button onclick="addDomain()">追加</button>
+    </div>
+
+    <hr style="border:none;border-top:1px solid var(--border);margin:16px 0">
+
+    <!-- 個別メール -->
+    <p style="font-size:11px;font-weight:bold;color:var(--secondary);margin-bottom:6px">👤 個別メールアドレス</p>
+    <p style="font-size:11px;color:var(--muted);margin-bottom:8px">最初にログインした方が管理者です。</p>
     <div id="user-list"></div>
     <div class="add-form">
       <input type="email" id="new-email" placeholder="追加するGmailアドレス">
       <button onclick="addUser()">追加</button>
     </div>
-    <div class="mbtns" style="margin-top:12px">
+
+    <div class="mbtns" style="margin-top:14px">
       <button class="btn-cancel" onclick="closeAdmin()">閉じる</button>
     </div>
   </div>
@@ -420,9 +435,14 @@ async function checkAccess(user) {
     });
     return 'admin';
   }
+  // 個別メールアドレスで一致チェック
   const u = snap.child(emailKey(user.email)).val();
-  if (!u) return 'denied';
-  return u.role || 'user';
+  if (u) return u.role || 'user';
+  // ドメイン一括許可チェック
+  const domain = user.email.split('@')[1] || '';
+  const dSnap  = await db.ref('allowedDomains/'+emailKey(domain)).once('value');
+  if (dSnap.exists()) return dSnap.val().role || 'user';
+  return 'denied';
 }
 
 // ============================================================
@@ -742,6 +762,7 @@ function saveItem() {
 // ============================================================
 function openAdmin() {
   loadUsers();
+  loadDomains();
   document.getElementById('admin-mbg').classList.add('show');
 }
 function closeAdmin() {
@@ -772,6 +793,33 @@ function removeUser(key) {
   const email=keyEmail(key);
   if (!confirm(`${email} を削除しますか？`)) return;
   db.ref('allowedEmails/'+key).remove().then(()=>{ loadUsers(); toast('削除しました'); });
+}
+
+// ドメイン管理
+function loadDomains() {
+  db.ref('allowedDomains').once('value', snap=>{
+    const domains = snap.val()||{};
+    document.getElementById('domain-list').innerHTML =
+      Object.entries(domains).map(([k,d])=>`
+        <div class="uitem">
+          <span class="role-badge" style="background:var(--primary)">ドメイン</span>
+          <span style="flex:1;font-size:12px">@${esc(d.domain)}</span>
+          <button onclick="removeDomain('${k}')" style="font-size:10px;padding:1px 6px;border:1px solid var(--accent);color:#b84040;background:white;border-radius:3px;cursor:pointer">削除</button>
+        </div>`).join('') || '<p style="font-size:12px;color:var(--muted);margin-bottom:6px">なし</p>';
+  });
+}
+async function addDomain() {
+  let domain = (document.getElementById('new-domain').value||'').trim().toLowerCase();
+  domain = domain.replace(/^@/,''); // 先頭の@を除去
+  if (!domain||!domain.includes('.')) { alert('ドメインを正しく入力してください（例: marugotoinc.co.jp）'); return; }
+  await db.ref('allowedDomains/'+emailKey(domain)).set({ domain, role:'user', addedAt:Date.now() });
+  document.getElementById('new-domain').value='';
+  loadDomains(); toast('@'+domain+' を許可しました');
+}
+function removeDomain(key) {
+  const domain = keyEmail(key);
+  if (!confirm(`@${domain} の一括許可を削除しますか？`)) return;
+  db.ref('allowedDomains/'+key).remove().then(()=>{ loadDomains(); toast('削除しました'); });
 }
 
 // ============================================================
