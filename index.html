@@ -252,6 +252,48 @@ body {
   display: flex; align-items: center; justify-content: center;
   z-index: 9998; font-size: 14px; color: var(--muted);
 }
+
+/* ========== HOME TAB ========== */
+.home-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.home-section {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 4px; overflow: hidden; display: flex; flex-direction: column;
+}
+.home-sec-hdr {
+  background: var(--secondary); color: var(--white);
+  padding: 8px 12px; display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+}
+.home-sec-hdr .hdr-title { flex: 1; font-size: 13px; font-weight: bold; }
+.home-count {
+  background: var(--primary); color: var(--white);
+  font-size: 11px; padding: 1px 8px; border-radius: 10px; white-space: nowrap;
+}
+.btn-home-goto {
+  font-size: 11px; padding: 2px 8px; background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.3); color: var(--white);
+  border-radius: 3px; cursor: pointer; font-family: inherit; white-space: nowrap;
+}
+.btn-home-goto:hover { background: rgba(255,255,255,.27); }
+.home-list { overflow-y: auto; max-height: 280px; }
+.home-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 12px; border-bottom: 1px solid #EBEBEB;
+  cursor: pointer; transition: background .1s; font-size: 13px;
+}
+.home-item:last-child { border-bottom: none; }
+.home-item:hover { background: var(--hover); }
+.hi-genre {
+  font-size: 10px; color: var(--white); background: var(--gray1);
+  padding: 1px 6px; border-radius: 2px; white-space: nowrap; flex-shrink: 0;
+}
+.hi-title {
+  flex: 1; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; font-weight: bold;
+}
+.hi-url { font-size: 11px; color: var(--gray3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.home-empty { padding: 20px; text-align: center; color: var(--muted); font-size: 13px; }
 </style>
 </head>
 <body>
@@ -292,7 +334,8 @@ body {
     <button class="btn-hdr" onclick="doSignOut()">ログアウト</button>
   </div>
   <div id="tabbar">
-    <div class="tab active" data-tab="links"     onclick="switchTab('links')">🔗 リンク</div>
+    <div class="tab active" data-tab="home"      onclick="switchTab('home')">🏠 ホーム</div>
+    <div class="tab" data-tab="links"     onclick="switchTab('links')">🔗 リンク</div>
     <div class="tab" data-tab="accounts"  onclick="switchTab('accounts')">🔑 アカウント</div>
     <div class="tab" data-tab="memos"     onclick="switchTab('memos')">📝 メモ</div>
     <div class="tab" data-tab="clipboard" onclick="switchTab('clipboard')">📋 クリップボード</div>
@@ -372,7 +415,7 @@ const db   = firebase.database();
 // ============================================================
 let currentUser  = null;
 let currentRole  = null;
-let currentTab   = 'links';
+let currentTab   = 'home';
 let expandedId   = null;   // 展開中の行ID
 let editTarget   = null;   // { tab, id }
 let dragSrcId    = null;
@@ -460,7 +503,7 @@ function attachAll() {
     const ref = db.ref(tab+'/items');
     ref.on('value', snap=>{
       cache[tab] = snap.val()||{};
-      if (currentTab===tab) renderTab(tab);
+      if (currentTab===tab || currentTab==='home') renderTab(currentTab);
     });
     dbListeners[tab] = ref;
   });
@@ -481,7 +524,45 @@ function switchTab(tab) {
 
 function renderTab(tab) {
   const el = document.getElementById('content');
-  tab==='clipboard' ? renderClipboard(el) : renderTable(el,tab);
+  if      (tab==='home')      renderHome(el);
+  else if (tab==='clipboard') renderClipboard(el);
+  else                        renderTable(el,tab);
+}
+
+// ============================================================
+// HOME TAB
+// ============================================================
+function renderHome(el) {
+  const sections = [
+    { key:'links',     label:'🔗 リンク',         fields: i => i.url ? `<span class="hi-url">${esc(i.url)}</span>` : '' },
+    { key:'accounts',  label:'🔑 アカウント',      fields: i => i.username ? `<span class="hi-url">${esc(i.username)}</span>` : '' },
+    { key:'memos',     label:'📝 メモ',            fields: i => i.url ? `<span class="hi-url">${esc(i.url)}</span>` : '' },
+    { key:'clipboard', label:'📋 クリップボード',  fields: () => '' }
+  ];
+
+  const cards = sections.map(sec => {
+    const items = sortItems(cache[sec.key]);
+    const rows = items.map(item => `
+      <div class="home-item" onclick="switchTab('${sec.key}')">
+        <span class="hi-genre">${esc(item.genre||'—')}</span>
+        <span class="hi-title">${esc(item.title)}</span>
+        ${sec.fields(item)}
+      </div>`).join('');
+
+    return `
+      <div class="home-section">
+        <div class="home-sec-hdr">
+          <span class="hdr-title">${sec.label}</span>
+          <span class="home-count">${items.length}件</span>
+          <button class="btn-home-goto" onclick="switchTab('${sec.key}')">→ タブへ</button>
+        </div>
+        <div class="home-list">
+          ${rows || '<div class="home-empty">データなし</div>'}
+        </div>
+      </div>`;
+  }).join('');
+
+  el.innerHTML = `<div class="home-grid">${cards}</div>`;
 }
 
 // ============================================================
