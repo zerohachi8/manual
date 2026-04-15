@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社内マニュアル | zerohachi</title>
+<style>
+:root {
+  --bg:       #F4F0E4;
+  --primary:  #44A194;
+  --secondary:#537D96;
+  --accent:   #EC8F8D;
+  --white:    #ffffff;
+  --text:     #2a2a2a;
+  --muted:    #888;
+  --border:   #d4cfc3;
+  --hover:    #e6f5f3;
+  --copied:   #c8ede9;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Yu Gothic UI','Meiryo UI','Hiragino Kaku Gothic ProN','Meiryo',sans-serif;
+  background: var(--bg); color: var(--text); font-size: 13px;
+  height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+}
+
+/* ========== AUTH SCREENS ========== */
+.auth-screen {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+}
+.auth-card {
+  background: var(--white); border-radius: 12px; padding: 44px 40px;
+  text-align: center; box-shadow: 0 4px 28px rgba(0,0,0,0.12);
+  border-top: 4px solid var(--primary); width: 360px;
+}
+.auth-card h1 { font-size: 20px; color: var(--primary); margin-bottom: 6px; }
+.auth-card .sub { font-size: 12px; color: var(--muted); margin-bottom: 28px; }
+.btn-google {
+  display: flex; align-items: center; gap: 10px; justify-content: center;
+  width: 100%; padding: 11px 20px; background: var(--white);
+  border: 1px solid #ddd; border-radius: 6px; font-size: 13px;
+  cursor: pointer; font-family: inherit; transition: background .1s;
+}
+.btn-google:hover { background: #f8f8f8; }
+.btn-google svg { width: 18px; height: 18px; flex-shrink: 0; }
+.auth-card .pending-email {
+  margin-top: 14px; font-size: 12px; color: var(--primary);
+  background: #e6f5f3; padding: 8px 12px; border-radius: 6px;
+}
+.btn-logout-link {
+  margin-top: 16px; font-size: 12px; color: var(--muted);
+  background: none; border: none; cursor: pointer;
+  text-decoration: underline; font-family: inherit;
+}
+
+/* ========== APP LAYOUT ========== */
+#app { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+/* ========== HEADER ========== */
+#header {
+  background: var(--primary); color: var(--white);
+  padding: 6px 16px; display: flex; align-items: center; gap: 10px;
+  flex-shrink: 0;
+}
+#header h1 { font-size: 14px; font-weight: bold; letter-spacing: .5px; }
+#header .spacer { flex: 1; }
+#header .user-email { font-size: 11px; opacity: .85; }
+.btn-hdr {
+  font-size: 11px; padding: 3px 10px;
+  background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.35);
+  color: var(--white); border-radius: 3px; cursor: pointer; font-family: inherit;
+}
+.btn-hdr:hover { background: rgba(255,255,255,.28); }
+
+/* ========== TABS ========== */
+#tabbar {
+  background: var(--secondary); display: flex;
+  padding: 0 8px; flex-shrink: 0; gap: 2px; overflow-x: auto;
+}
+#tabbar::-webkit-scrollbar { height: 3px; }
+#tabbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.3); }
+.tab {
+  padding: 7px 18px; font-size: 12px; color: rgba(255,255,255,.72);
+  cursor: pointer; border-radius: 4px 4px 0 0; white-space: nowrap;
+  user-select: none; border: 1px solid transparent; border-bottom: none;
+}
+.tab:hover { color: var(--white); background: rgba(255,255,255,.12); }
+.tab.active { background: var(--bg); color: var(--secondary); font-weight: bold; }
+
+/* ========== CONTENT ========== */
+#content { flex: 1; overflow-y: auto; padding: 12px; min-height: 0; }
+#content::-webkit-scrollbar { width: 6px; }
+#content::-webkit-scrollbar-thumb { background: #c0b8a8; border-radius: 3px; }
+
+/* ========== TABLE ========== */
+.dtable {
+  width: 100%; border-collapse: collapse; background: var(--white);
+  border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+  table-layout: fixed;
+}
+.dtable thead tr { background: var(--primary); }
+.dtable th {
+  padding: 7px 8px; color: var(--white); font-size: 11px; font-weight: bold;
+  text-align: left; border-right: 1px solid rgba(255,255,255,.2); white-space: nowrap;
+  overflow: hidden;
+}
+.dtable th:last-child { border-right: none; }
+
+.data-row {
+  border-bottom: 1px solid #ede9e0; cursor: pointer; transition: background .1s;
+}
+.data-row:hover { background: var(--hover); }
+.data-row.copied { background: var(--copied) !important; }
+.data-row.drag-over { border-top: 2px solid var(--primary); background: #d0eae7 !important; }
+.data-row td {
+  padding: 5px 8px; vertical-align: middle;
+  border-right: 1px solid #ede9e0; overflow: hidden;
+}
+.data-row td:last-child { border-right: none; }
+
+/* Detail row */
+.detail-row td {
+  background: #f8f6f0; padding: 12px 18px;
+  border-bottom: 1px solid #ede9e0;
+}
+.detail-grid { display: grid; grid-template-columns: 100px 1fr; gap: 4px 10px; font-size: 12px; }
+.detail-lbl { font-size: 10px; color: var(--muted); font-weight: bold; padding-top: 2px; }
+.detail-val { line-height: 1.6; white-space: pre-wrap; word-break: break-all; }
+.detail-link {
+  color: var(--secondary); text-decoration: none; word-break: break-all;
+}
+.detail-link:hover { text-decoration: underline; }
+.pw-wrap { display: flex; align-items: center; gap: 8px; }
+.btn-pw {
+  font-size: 10px; padding: 1px 7px; border: 1px solid var(--border);
+  background: var(--white); border-radius: 3px; cursor: pointer;
+  font-family: inherit; flex-shrink: 0;
+}
+
+/* Cells */
+.c-drag { width: 22px !important; text-align: center; color: #ccc; cursor: grab; padding: 0 4px !important; }
+.c-drag:active { cursor: grabbing; }
+.c-num  { width: 30px !important; text-align: center; color: #bbb; font-size: 11px; }
+.c-genre{
+  width: 82px !important; font-size: 10px; color: var(--white);
+  background: var(--secondary); text-align: center; padding: 3px 5px !important;
+}
+.c-title-url { /* flex remainder */ }
+.title-l {
+  font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.url-l {
+  font-size: 10px; color: var(--secondary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px;
+}
+.c-date  { width: 54px !important; font-size: 10px; color: var(--muted); white-space: nowrap; }
+.c-act   { width: 58px !important; text-align: center; white-space: nowrap; }
+.c-act button {
+  font-size: 10px; padding: 2px 5px; border: 1px solid #ddd;
+  background: var(--white); border-radius: 3px; cursor: pointer; font-family: inherit;
+}
+.c-act button:hover { background: #f5f5f5; }
+.btn-del { color: #b84040; border-color: var(--accent) !important; }
+.btn-del:hover { background: #fff0f0 !important; }
+
+/* Add row */
+.row-add td { text-align: center; padding: 8px; background: #faf8f4; }
+.row-add td button {
+  font-size: 11px; padding: 4px 18px; background: var(--white);
+  border: 1px dashed var(--primary); color: var(--primary);
+  border-radius: 3px; cursor: pointer; font-family: inherit;
+}
+.row-add td button:hover { background: var(--hover); }
+
+/* ========== TOAST ========== */
+#toast {
+  position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+  background: var(--primary); color: var(--white); padding: 7px 22px;
+  border-radius: 20px; font-size: 12px; pointer-events: none;
+  opacity: 0; transition: opacity .2s; z-index: 9999; font-family: inherit;
+  white-space: nowrap;
+}
+#toast.show { opacity: 1; }
+
+/* ========== MODAL ========== */
+.mbg {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.36); z-index: 1000;
+  align-items: center; justify-content: center;
+}
+.mbg.show { display: flex; }
+.mbox {
+  background: var(--white); border-radius: 8px; padding: 22px;
+  box-shadow: 0 4px 28px rgba(0,0,0,.22); border-top: 4px solid var(--primary);
+  width: 500px; max-width: 95vw; max-height: 90vh; overflow-y: auto;
+}
+.mbox h3 { font-size: 14px; color: var(--primary); font-weight: bold; margin-bottom: 16px; }
+.mbox label {
+  font-size: 11px; color: #666; display: block;
+  margin-bottom: 3px; margin-top: 12px;
+}
+.mbox input,.mbox textarea,.mbox select {
+  width: 100%; border: 1px solid #ccc; border-radius: 4px;
+  padding: 7px 9px; font-size: 12px; font-family: inherit; background: #fafaf8;
+}
+.mbox input:focus,.mbox textarea:focus,.mbox select:focus {
+  outline: none; border-color: var(--primary); background: var(--white);
+}
+.mbox textarea { height: 110px; resize: vertical; }
+.mbtns {
+  margin-top: 18px; display: flex; gap: 8px; justify-content: flex-end;
+}
+.mbtns button {
+  padding: 6px 20px; font-size: 12px; border-radius: 4px;
+  border: 1px solid #ccc; cursor: pointer; font-family: inherit;
+}
+.btn-save { background: var(--primary); color: var(--white); border-color: var(--primary); }
+.btn-save:hover { background: #389189; }
+.btn-cancel { background: var(--white); }
+.btn-cancel:hover { background: #f5f5f5; }
+
+/* Admin modal */
+.uitem {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 0; border-bottom: 1px solid #eee; font-size: 12px;
+}
+.uitem:last-child { border-bottom: none; }
+.role-badge {
+  font-size: 10px; padding: 1px 7px; border-radius: 10px;
+  background: var(--secondary); color: var(--white); white-space: nowrap;
+}
+.role-badge.admin { background: var(--primary); }
+.add-form { display: flex; gap: 6px; margin-top: 14px; }
+.add-form input { flex: 1; }
+.add-form button {
+  white-space: nowrap; padding: 6px 12px; font-size: 12px;
+  border-radius: 4px; border: 1px solid var(--primary);
+  background: var(--primary); color: var(--white); cursor: pointer; font-family: inherit;
+}
+.add-form button:hover { background: #389189; }
+
+/* Loading */
+#loading {
+  position: fixed; inset: 0; background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9998; font-size: 13px; color: var(--muted);
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading">読み込み中...</div>
+
+<!-- LOGIN -->
+<div id="login-screen" class="auth-screen" style="display:none">
+  <div class="auth-card">
+    <h1>📋 社内マニュアル</h1>
+    <p class="sub">zerohachi 社員専用ツール</p>
+    <button class="btn-google" onclick="doSignIn()">
+      <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      Googleアカウントでログイン
+    </button>
+  </div>
+</div>
+
+<!-- PENDING -->
+<div id="pending-screen" class="auth-screen" style="display:none">
+  <div class="auth-card">
+    <h1>⏳ アクセス待ち</h1>
+    <p class="sub">管理者にアクセス許可を依頼してください</p>
+    <div class="pending-email" id="pending-email"></div>
+    <button class="btn-logout-link" onclick="doSignOut()">ログアウト</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+  <div id="header">
+    <span style="font-size:16px">📋</span>
+    <h1>社内マニュアル</h1>
+    <span class="spacer"></span>
+    <span class="user-email" id="user-email"></span>
+    <button class="btn-hdr" id="btn-admin" style="display:none" onclick="openAdmin()">⚙ ユーザー管理</button>
+    <button class="btn-hdr" onclick="doSignOut()">ログアウト</button>
+  </div>
+  <div id="tabbar">
+    <div class="tab active" data-tab="clipboard" onclick="switchTab('clipboard')">📋 クリップボード</div>
+    <div class="tab" data-tab="links"     onclick="switchTab('links')">🔗 リンク</div>
+    <div class="tab" data-tab="memos"     onclick="switchTab('memos')">📝 メモ</div>
+    <div class="tab" data-tab="accounts"  onclick="switchTab('accounts')">🔑 アカウント</div>
+  </div>
+  <div id="content"></div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- EDIT MODAL -->
+<div id="edit-mbg" class="mbg">
+  <div class="mbox">
+    <h3 id="edit-title">編集</h3>
+    <div id="edit-fields"></div>
+    <div class="mbtns">
+      <button class="btn-cancel" onclick="closeEdit()">キャンセル</button>
+      <button class="btn-save"   onclick="saveItem()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div id="admin-mbg" class="mbg">
+  <div class="mbox" style="width:430px">
+    <h3>⚙ ユーザー管理</h3>
+    <p style="font-size:11px;color:var(--muted);margin-bottom:12px">許可するGmailアドレスを管理します。最初にログインした方が管理者です。</p>
+    <div id="user-list"></div>
+    <div class="add-form">
+      <input type="email" id="new-email" placeholder="追加するGmailアドレス">
+      <button onclick="addUser()">追加</button>
+    </div>
+    <div class="mbtns" style="margin-top:12px">
+      <button class="btn-cancel" onclick="closeAdmin()">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase CDN -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
+// ============================================================
+// FIREBASE INIT
+// ============================================================
+firebase.initializeApp({
+  apiKey:            "AIzaSyDGhK5znEDsU1m4s1AaxVyF7VHyhWHeIPI",
+  authDomain:        "zerohachi-manual.firebaseapp.com",
+  databaseURL:       "https://zerohachi-manual-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:         "zerohachi-manual",
+  storageBucket:     "zerohachi-manual.firebasestorage.app",
+  messagingSenderId: "690527073051",
+  appId:             "1:690527073051:web:3124f90ed97f69763199be"
+});
+const auth = firebase.auth();
+const db   = firebase.database();
+
+// ============================================================
+// STATE
+// ============================================================
+let currentUser  = null;
+let currentRole  = null;
+let currentTab   = 'clipboard';
+let expandedId   = null;   // 展開中の行ID
+let editTarget   = null;   // { tab, id }
+let dragSrcId    = null;
+let dragSrcTab   = null;
+let dbListeners  = {};
+const cache      = { clipboard:{}, links:{}, memos:{}, accounts:{} };
+
+// ============================================================
+// HELPERS
+// ============================================================
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const fmtDate = ts => { if(!ts) return ''; const d=new Date(ts); return `${d.getMonth()+1}/${d.getDate()}`; };
+const emailKey  = e => e.replace(/\./g,',').replace(/@/g,'__at__');
+const keyEmail  = k => k.replace(/,/g,'.').replace(/__at__/g,'@');
+
+function sortItems(obj) {
+  return Object.entries(obj||{})
+    .map(([id,v])=>({...v,id}))
+    .sort((a,b)=>(a.order??999)-(b.order??999));
+}
+
+function toast(msg, ms=2000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), ms);
+}
+
+function show(name) {
+  document.getElementById('loading').style.display       = 'none';
+  document.getElementById('login-screen').style.display  = name==='login'   ? 'flex' : 'none';
+  document.getElementById('pending-screen').style.display= name==='pending' ? 'flex' : 'none';
+  document.getElementById('app').style.display           = name==='app'     ? 'flex' : 'none';
+}
+
+// ============================================================
+// AUTH
+// ============================================================
+function doSignIn() {
+  auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+      .catch(e=>toast('ログイン失敗: '+e.message));
+}
+function doSignOut() { auth.signOut(); }
+
+auth.onAuthStateChanged(async user => {
+  if (!user) { show('login'); detachAll(); currentUser=null; return; }
+  currentUser = user;
+  const role  = await checkAccess(user);
+  currentRole = role;
+  if (role === 'denied') {
+    show('pending');
+    document.getElementById('pending-email').textContent = 'あなたのメールアドレス: '+user.email;
+    return;
+  }
+  document.getElementById('user-email').textContent = user.email;
+  document.getElementById('btn-admin').style.display = role==='admin' ? '' : 'none';
+  show('app');
+  attachAll();
+  renderTab(currentTab);
+});
+
+async function checkAccess(user) {
+  const snap = await db.ref('allowedEmails').once('value');
+  if (!snap.exists()) {
+    // 初回 → 管理者として自動登録
+    await db.ref('allowedEmails/'+emailKey(user.email)).set({
+      email: user.email, role:'admin', addedAt: Date.now()
+    });
+    return 'admin';
+  }
+  const u = snap.child(emailKey(user.email)).val();
+  if (!u) return 'denied';
+  return u.role || 'user';
+}
+
+// ============================================================
+// REALTIME LISTENERS
+// ============================================================
+function attachAll() {
+  ['clipboard','links','memos','accounts'].forEach(tab=>{
+    const ref = db.ref(tab+'/items');
+    ref.on('value', snap=>{
+      cache[tab] = snap.val()||{};
+      if (currentTab===tab) renderTab(tab);
+    });
+    dbListeners[tab] = ref;
+  });
+}
+function detachAll() {
+  Object.values(dbListeners).forEach(r=>r.off());
+  dbListeners={};
+}
+
+// ============================================================
+// TAB SWITCH
+// ============================================================
+function switchTab(tab) {
+  currentTab=tab; expandedId=null;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));
+  renderTab(tab);
+}
+
+function renderTab(tab) {
+  const el = document.getElementById('content');
+  tab==='clipboard' ? renderClipboard(el) : renderTable(el,tab);
+}
+
+// ============================================================
+// CLIPBOARD TAB
+// ============================================================
+function renderClipboard(el) {
+  const rows = sortItems(cache.clipboard).map((item,i)=>`
+    <tr class="data-row" id="row_${item.id}"
+        draggable="true"
+        ondragstart="dStart(event,'${item.id}','clipboard')"
+        ondragover="dOver(event)"
+        ondragleave="dLeave(event)"
+        ondragend="dEnd('${item.id}')"
+        ondrop="dDrop(event,'${item.id}','clipboard')"
+        onclick="copyClip('${item.id}')">
+      <td class="c-drag">⠿</td>
+      <td class="c-num">${i+1}</td>
+      <td class="c-genre">${esc(item.genre)}</td>
+      <td style="overflow:hidden"><div class="title-l">${esc(item.title)}</div></td>
+      <td class="c-date">${fmtDate(item.updatedAt)}</td>
+      <td class="c-act" onclick="event.stopPropagation()">
+        <button onclick="openEdit('clipboard','${item.id}')">✏️</button>
+        <button class="btn-del" onclick="delItem('clipboard','${item.id}')">✕</button>
+      </td>
+    </tr>`).join('');
+
+  el.innerHTML = `
+    <table class="dtable">
+      <colgroup>
+        <col style="width:22px"><col style="width:30px"><col style="width:82px">
+        <col><col style="width:54px"><col style="width:58px">
+      </colgroup>
+      <thead><tr>
+        <th></th><th>#</th><th>カテゴリー</th>
+        <th>タイトル</th><th>更新日</th><th>操作</th>
+      </tr></thead>
+      <tbody>
+        ${rows}
+        <tr class="row-add"><td colspan="6"><button onclick="openEdit('clipboard',null)">＋ 行を追加</button></td></tr>
+      </tbody>
+    </table>`;
+}
+
+function copyClip(id) {
+  const item = cache.clipboard[id]; if(!item) return;
+  const txt = item.body||'';
+  navigator.clipboard.writeText(txt).then(()=>{
+    flash(id); toast('「'+item.title+'」をコピーしました');
+  }).catch(()=>{
+    const ta=document.createElement('textarea'); ta.value=txt;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta); flash(id); toast('コピーしました');
+  });
+}
+function flash(id) {
+  const r=document.getElementById('row_'+id); if(!r) return;
+  r.classList.add('copied'); setTimeout(()=>r.classList.remove('copied'),700);
+}
+
+// ============================================================
+// LINKS / MEMOS / ACCOUNTS TABLE
+// ============================================================
+function renderTable(el, tab) {
+  const items = sortItems(cache[tab]);
+
+  const rows = items.map((item,i)=>{
+    const exp = expandedId===item.id;
+    return `
+      <tr class="data-row${exp?' expanded':''}" id="row_${item.id}"
+          draggable="true"
+          ondragstart="dStart(event,'${item.id}','${tab}')"
+          ondragover="dOver(event)"
+          ondragleave="dLeave(event)"
+          ondragend="dEnd('${item.id}')"
+          ondrop="dDrop(event,'${item.id}','${tab}')"
+          onclick="toggleDetail('${item.id}','${tab}')">
+        <td class="c-drag">⠿</td>
+        <td class="c-num">${i+1}</td>
+        <td class="c-genre">${esc(item.genre)}</td>
+        <td class="c-title-url" style="overflow:hidden">
+          <div class="title-l">${esc(item.title)}</div>
+          ${item.url?`<div class="url-l">${esc(item.url)}</div>`:''}
+        </td>
+        <td class="c-date">${fmtDate(item.updatedAt)}</td>
+        <td class="c-act" onclick="event.stopPropagation()">
+          <button onclick="openEdit('${tab}','${item.id}')">✏️</button>
+          <button class="btn-del" onclick="delItem('${tab}','${item.id}')">✕</button>
+        </td>
+      </tr>
+      ${exp ? buildDetail(item,tab) : ''}
+    `;
+  }).join('');
+
+  el.innerHTML = `
+    <table class="dtable">
+      <colgroup>
+        <col style="width:22px"><col style="width:30px"><col style="width:82px">
+        <col><col style="width:54px"><col style="width:58px">
+      </colgroup>
+      <thead><tr>
+        <th></th><th>#</th><th>ジャンル</th>
+        <th>タイトル / URL</th><th>更新日</th><th>操作</th>
+      </tr></thead>
+      <tbody>
+        ${rows}
+        <tr class="row-add"><td colspan="6"><button onclick="openEdit('${tab}',null)">＋ 行を追加</button></td></tr>
+      </tbody>
+    </table>`;
+}
+
+function buildDetail(item, tab) {
+  let inner = '';
+  if (tab==='accounts') {
+    inner = `
+      <div class="detail-lbl">サービス名</div><div class="detail-val">${esc(item.title)}</div>
+      <div class="detail-lbl">URL</div>
+      <div class="detail-val">${item.url?`<a class="detail-link" href="${esc(item.url)}" target="_blank" rel="noopener">${esc(item.url)}</a>`:'—'}</div>
+      <div class="detail-lbl">ユーザー名</div><div class="detail-val">${esc(item.username)||'—'}</div>
+      <div class="detail-lbl">パスワード</div>
+      <div class="detail-val">
+        <div class="pw-wrap">
+          <span id="pw_${item.id}" data-shown="0" style="letter-spacing:3px;font-size:14px">••••••••</span>
+          <button class="btn-pw" onclick="togglePw('${item.id}','${esc(item.password||'')}')">表示</button>
+        </div>
+      </div>
+      ${item.note?`<div class="detail-lbl">メモ</div><div class="detail-val">${esc(item.note)}</div>`:''}
+    `;
+  } else {
+    inner = `
+      <div class="detail-lbl">タイトル</div><div class="detail-val">${esc(item.title)}</div>
+      ${item.url?`<div class="detail-lbl">URL</div><div class="detail-val"><a class="detail-link" href="${esc(item.url)}" target="_blank" rel="noopener">${esc(item.url)}</a></div>`:''}
+      ${item.note?`<div class="detail-lbl">テキスト</div><div class="detail-val">${esc(item.note)}</div>`:''}
+    `;
+  }
+  return `<tr class="detail-row" id="det_${item.id}">
+    <td colspan="6"><div class="detail-grid">${inner}</div></td>
+  </tr>`;
+}
+
+function toggleDetail(id, tab) {
+  expandedId = expandedId===id ? null : id;
+  renderTab(tab);
+}
+
+function togglePw(id, pw) {
+  const el=document.getElementById('pw_'+id); if(!el) return;
+  const btn=el.nextElementSibling;
+  if(el.dataset.shown==='1'){
+    el.textContent='••••••••'; el.style.letterSpacing='3px';
+    el.style.fontSize='14px'; el.dataset.shown='0'; btn.textContent='表示';
+  } else {
+    el.textContent=pw; el.style.letterSpacing=''; el.style.fontSize='';
+    el.dataset.shown='1'; btn.textContent='隠す';
+  }
+}
+
+// ============================================================
+// DRAG & DROP
+// ============================================================
+function dStart(e,id,tab) {
+  dragSrcId=id; dragSrcTab=tab; e.dataTransfer.effectAllowed='move';
+  setTimeout(()=>{ const r=document.getElementById('row_'+id); if(r) r.style.opacity='.35'; },0);
+}
+function dOver(e)  { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+function dLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function dEnd(id)  { const r=document.getElementById('row_'+id); if(r) r.style.opacity=''; }
+
+function dDrop(e,targetId,tab) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  dEnd(dragSrcId);
+  if (!dragSrcId || dragSrcId===targetId || dragSrcTab!==tab) return;
+
+  const sorted = sortItems(cache[tab]);
+  const si = sorted.findIndex(i=>i.id===dragSrcId);
+  const ti = sorted.findIndex(i=>i.id===targetId);
+  if (si<0||ti<0) return;
+
+  const [moved] = sorted.splice(si,1);
+  sorted.splice(ti,0,moved);
+
+  const upd = {};
+  sorted.forEach((item,idx)=>{ upd[`${tab}/items/${item.id}/order`]=idx; });
+  db.ref().update(upd);
+  dragSrcId=null; dragSrcTab=null;
+}
+
+// ============================================================
+// CRUD
+// ============================================================
+function delItem(tab,id) {
+  if (!confirm('この行を削除しますか？')) return;
+  db.ref(`${tab}/items/${id}`).remove();
+  if (expandedId===id) expandedId=null;
+}
+
+// ============================================================
+// EDIT MODAL
+// ============================================================
+function openEdit(tab,id) {
+  editTarget={tab,id};
+  const item = id ? cache[tab][id] : null;
+  document.getElementById('edit-title').textContent = id ? '編集' : '追加';
+
+  let f='';
+  if (tab==='clipboard') {
+    f=`
+      <label>カテゴリー</label>
+      <input id="f-genre" value="${esc(item?.genre||'')}" placeholder="例: 汎用">
+      <label>タイトル ＊</label>
+      <input id="f-title" value="${esc(item?.title||'')}" placeholder="例: 要約依頼">
+      <label>本文（コピーされる内容）＊</label>
+      <textarea id="f-body">${esc(item?.body||'')}</textarea>
+    `;
+  } else if (tab==='accounts') {
+    f=`
+      <label>ジャンル</label>
+      <input id="f-genre" value="${esc(item?.genre||'')}" placeholder="例: SNS">
+      <label>タイトル（サービス名）＊</label>
+      <input id="f-title" value="${esc(item?.title||'')}" placeholder="例: Gmail">
+      <label>URL</label>
+      <input id="f-url" type="url" value="${esc(item?.url||'')}" placeholder="https://...">
+      <label>ユーザー名 / メールアドレス</label>
+      <input id="f-username" value="${esc(item?.username||'')}">
+      <label>パスワード</label>
+      <input id="f-password" value="${esc(item?.password||'')}">
+      <label>メモ</label>
+      <textarea id="f-note">${esc(item?.note||'')}</textarea>
+    `;
+  } else {
+    f=`
+      <label>ジャンル</label>
+      <input id="f-genre" value="${esc(item?.genre||'')}" placeholder="例: 参考資料">
+      <label>タイトル ＊</label>
+      <input id="f-title" value="${esc(item?.title||'')}">
+      <label>URL</label>
+      <input id="f-url" type="url" value="${esc(item?.url||'')}" placeholder="https://...">
+      <label>テキスト / メモ</label>
+      <textarea id="f-note">${esc(item?.note||'')}</textarea>
+    `;
+  }
+
+  document.getElementById('edit-fields').innerHTML=f;
+  document.getElementById('edit-mbg').classList.add('show');
+  setTimeout(()=>document.getElementById('f-title')?.focus(),50);
+}
+
+function closeEdit() {
+  document.getElementById('edit-mbg').classList.remove('show');
+  editTarget=null;
+}
+
+function saveItem() {
+  const {tab,id}=editTarget;
+  const title=(document.getElementById('f-title')?.value||'').trim();
+  if (!title) { alert('タイトルを入力してください'); return; }
+
+  const d = {
+    genre:     (document.getElementById('f-genre')?.value||'').trim(),
+    title,
+    updatedAt: Date.now()
+  };
+  if (tab==='clipboard') {
+    d.body = document.getElementById('f-body')?.value||'';
+  } else {
+    d.url  = (document.getElementById('f-url')?.value||'').trim();
+    d.note = document.getElementById('f-note')?.value||'';
+    if (tab==='accounts') {
+      d.username = document.getElementById('f-username')?.value||'';
+      d.password = document.getElementById('f-password')?.value||'';
+    }
+  }
+
+  if (id) {
+    db.ref(`${tab}/items/${id}`).update(d);
+  } else {
+    d.order = sortItems(cache[tab]).length;
+    db.ref(`${tab}/items`).push(d);
+  }
+  closeEdit(); toast('保存しました');
+}
+
+// ============================================================
+// ADMIN: USER MANAGEMENT
+// ============================================================
+function openAdmin() {
+  loadUsers();
+  document.getElementById('admin-mbg').classList.add('show');
+}
+function closeAdmin() {
+  document.getElementById('admin-mbg').classList.remove('show');
+}
+function loadUsers() {
+  db.ref('allowedEmails').once('value',snap=>{
+    const users=snap.val()||{};
+    document.getElementById('user-list').innerHTML =
+      Object.entries(users).map(([k,u])=>`
+        <div class="uitem">
+          <span class="role-badge ${u.role==='admin'?'admin':''}">${u.role==='admin'?'管理者':'一般'}</span>
+          <span style="flex:1;font-size:12px">${esc(u.email)}</span>
+          ${u.email!==currentUser?.email
+            ?`<button onclick="removeUser('${k}')" style="font-size:10px;padding:1px 6px;border:1px solid var(--accent);color:#b84040;background:white;border-radius:3px;cursor:pointer">削除</button>`
+            :''}
+        </div>`).join('') || '<p style="font-size:12px;color:var(--muted)">ユーザーなし</p>';
+  });
+}
+async function addUser() {
+  const email=(document.getElementById('new-email').value||'').trim();
+  if (!email||!email.includes('@')) { alert('有効なメールアドレスを入力してください'); return; }
+  await db.ref('allowedEmails/'+emailKey(email)).set({ email, role:'user', addedAt:Date.now() });
+  document.getElementById('new-email').value='';
+  loadUsers(); toast(email+' を追加しました');
+}
+function removeUser(key) {
+  const email=keyEmail(key);
+  if (!confirm(`${email} を削除しますか？`)) return;
+  db.ref('allowedEmails/'+key).remove().then(()=>{ loadUsers(); toast('削除しました'); });
+}
+
+// ============================================================
+// KEYBOARD
+// ============================================================
+document.addEventListener('keydown', e=>{
+  if (e.key==='Escape') { closeEdit(); closeAdmin(); }
+  if (e.key==='Enter'&&e.ctrlKey&&document.getElementById('edit-mbg').classList.contains('show')) saveItem();
+});
+document.getElementById('edit-mbg').addEventListener('click',  e=>{ if(e.target===e.currentTarget) closeEdit(); });
+document.getElementById('admin-mbg').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeAdmin(); });
+</script>
+</body>
+</html>
