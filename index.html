@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>社内マニュアル | zerohachi</title>
+<title>ゼロハチ株式会社マニュアル</title>
 <style>
 :root {
   --bg:       #F4F0E4;
@@ -278,17 +278,17 @@ body {
 <div id="app" style="display:none">
   <div id="header">
     <span style="font-size:16px">📋</span>
-    <h1>社内マニュアル</h1>
+    <h1>ゼロハチ株式会社マニュアル</h1>
     <span class="spacer"></span>
     <span class="user-email" id="user-email"></span>
     <button class="btn-hdr" id="btn-admin" style="display:none" onclick="openAdmin()">⚙ ユーザー管理</button>
     <button class="btn-hdr" onclick="doSignOut()">ログアウト</button>
   </div>
   <div id="tabbar">
-    <div class="tab active" data-tab="clipboard" onclick="switchTab('clipboard')">📋 クリップボード</div>
-    <div class="tab" data-tab="links"     onclick="switchTab('links')">🔗 リンク</div>
-    <div class="tab" data-tab="memos"     onclick="switchTab('memos')">📝 メモ</div>
+    <div class="tab active" data-tab="links"     onclick="switchTab('links')">🔗 リンク</div>
     <div class="tab" data-tab="accounts"  onclick="switchTab('accounts')">🔑 アカウント</div>
+    <div class="tab" data-tab="memos"     onclick="switchTab('memos')">📝 メモ</div>
+    <div class="tab" data-tab="clipboard" onclick="switchTab('clipboard')">📋 クリップボード</div>
   </div>
   <div id="content"></div>
 </div>
@@ -365,7 +365,7 @@ const db   = firebase.database();
 // ============================================================
 let currentUser  = null;
 let currentRole  = null;
-let currentTab   = 'clipboard';
+let currentTab   = 'links';
 let expandedId   = null;   // 展開中の行ID
 let editTarget   = null;   // { tab, id }
 let dragSrcId    = null;
