@@ -67,14 +67,6 @@ body {
   flex-shrink: 0;
 }
 #header h1 { font-size: 15px; font-weight: bold; letter-spacing: .5px; }
-#header .spacer { flex: 1; }
-#header .user-email { font-size: 12px; opacity: .85; }
-.btn-hdr {
-  font-size: 12px; padding: 3px 12px;
-  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.35);
-  color: var(--white); border-radius: 3px; cursor: pointer; font-family: inherit;
-}
-.btn-hdr:hover { background: rgba(255,255,255,.27); }
 
 /* ========== TABS ========== */
 #tabbar {
@@ -161,15 +153,39 @@ body {
   flex: 1; min-width: 0;
 }
 .c-date  { width: 56px !important; font-size: 11px; color: var(--muted); white-space: nowrap; }
-/* 編集・削除 テキストリンク */
-.act-row { display: flex; align-items: center; gap: 4px; }
+/* 編集・削除 列 */
+.c-act2 { width: 36px !important; text-align: right; white-space: nowrap; vertical-align: top; padding: 7px 8px !important; }
 .act-link {
-  font-size: 11px; color: var(--gray3); cursor: pointer; white-space: nowrap;
-  flex-shrink: 0; background: none; border: none; padding: 0;
-  font-family: inherit; text-decoration: none;
+  display: block; font-size: 11px; color: var(--gray3); cursor: pointer;
+  background: none; border: none; padding: 0; font-family: inherit; text-decoration: none;
+  line-height: 1.9; text-align: right; white-space: nowrap; width: 100%;
 }
 .act-link:hover { color: var(--primary); text-decoration: underline; }
-.act-del:hover  { color: var(--primary); }
+.act-del { margin-top: 2px; }
+/* 設定タブ */
+.tab-icon { padding: 8px 14px !important; margin-left: auto; }
+/* 設定パネル */
+.settings-wrap { max-width: 400px; margin: 0 auto; padding: 8px 0; }
+.settings-block {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 4px; overflow: hidden; margin-bottom: 10px;
+}
+.settings-row {
+  padding: 12px 16px; border-bottom: 1px solid #EBEBEB;
+  font-size: 13px; display: flex; align-items: center; gap: 10px;
+}
+.settings-row:last-child { border-bottom: none; }
+.settings-lbl { font-size: 11px; color: var(--muted); width: 90px; flex-shrink: 0; }
+.settings-val  { flex: 1; word-break: break-all; }
+.btn-settings {
+  width: 100%; padding: 10px 16px; font-size: 13px; text-align: left;
+  background: var(--white); border: none; border-bottom: 1px solid #EBEBEB;
+  cursor: pointer; font-family: inherit; color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+}
+.btn-settings:last-child { border-bottom: none; }
+.btn-settings:hover { background: var(--hover); }
+.btn-settings.danger { color: var(--primary); }
 
 /* Add row */
 .row-add td { text-align: center; padding: 9px; background: #F9F9F9; }
@@ -336,10 +352,6 @@ body {
   <div id="header">
     <span style="font-size:16px">📋</span>
     <h1>ゼロハチ株式会社マニュアル</h1>
-    <span class="spacer"></span>
-    <span class="user-email" id="user-email"></span>
-    <button class="btn-hdr" id="btn-admin" style="display:none" onclick="openAdmin()">⚙ ユーザー管理</button>
-    <button class="btn-hdr" onclick="doSignOut()">ログアウト</button>
   </div>
   <div id="tabbar">
     <div class="tab active" data-tab="home"      onclick="switchTab('home')">ホーム</div>
@@ -347,6 +359,7 @@ body {
     <div class="tab" data-tab="accounts"  onclick="switchTab('accounts')">アカウント</div>
     <div class="tab" data-tab="memos"     onclick="switchTab('memos')">メモ</div>
     <div class="tab" data-tab="clipboard" onclick="switchTab('clipboard')">クリップボード</div>
+    <div class="tab tab-icon" data-tab="settings" onclick="switchTab('settings')">⚙</div>
   </div>
   <div id="content"></div>
 </div>
@@ -487,8 +500,6 @@ auth.onAuthStateChanged(async user => {
     document.getElementById('pending-email').textContent = 'あなたのメールアドレス: '+user.email;
     return;
   }
-  document.getElementById('user-email').textContent = user.email;
-  document.getElementById('btn-admin').style.display = role==='admin' ? '' : 'none';
   show('app');
   attachAll();
   renderTab(currentTab);
@@ -543,6 +554,7 @@ function switchTab(tab) {
 function renderTab(tab) {
   const el = document.getElementById('content');
   if      (tab==='home')      renderHome(el);
+  else if (tab==='settings')  renderSettings(el);
   else if (tab==='clipboard') renderClipboard(el);
   else                        renderTable(el,tab);
 }
@@ -550,6 +562,27 @@ function renderTab(tab) {
 // ============================================================
 // HOME TAB
 // ============================================================
+// ============================================================
+// SETTINGS TAB
+// ============================================================
+function renderSettings(el) {
+  el.innerHTML = `
+    <div class="settings-wrap">
+      <div class="settings-block">
+        <div class="settings-row">
+          <span class="settings-lbl">ログイン中</span>
+          <span class="settings-val">${esc(currentUser?.email||'')}</span>
+        </div>
+      </div>
+      <div class="settings-block">
+        ${currentRole==='admin'
+          ? `<button class="btn-settings" onclick="openAdmin()">⚙ ユーザー管理</button>`
+          : ''}
+        <button class="btn-settings danger" onclick="doSignOut()">ログアウト</button>
+      </div>
+    </div>`;
+}
+
 function toggleHomeDetail(id, tab) {
   if (homeExpandedId===id && homeExpandedTab===tab) {
     homeExpandedId=null; homeExpandedTab=null;
@@ -561,10 +594,10 @@ function toggleHomeDetail(id, tab) {
 
 function renderHome(el) {
   const sections = [
-    { key:'links',     label:'リンク',        sub: i => i.url      ? `<div class="hi-row2">${esc(i.url)}</div>`      : '' },
-    { key:'accounts',  label:'アカウント',     sub: i => i.username ? `<div class="hi-row2">${esc(i.username)}</div>` : '' },
-    { key:'memos',     label:'メモ',           sub: () => '' },
-    { key:'clipboard', label:'クリップボード', sub: () => '' }
+    { key:'links',     label:'リンク'        },
+    { key:'accounts',  label:'アカウント'    },
+    { key:'memos',     label:'メモ'          },
+    { key:'clipboard', label:'クリップボード'}
   ];
 
   const cards = sections.map(sec => {
@@ -578,7 +611,6 @@ function renderHome(el) {
             <span class="hi-title">${esc(item.title)}</span>
             <span class="hi-date">${fmtDate(item.updatedAt)}</span>
           </div>
-          ${sec.sub(item)}
         </div>
         ${exp ? `<div class="home-detail-panel"><div class="detail-grid">${buildDetailInner(item,sec.key)}</div></div>` : ''}`;
     }).join('');
@@ -613,32 +645,29 @@ function renderClipboard(el) {
         onclick="copyClip('${item.id}')">
       <td class="c-drag">⠿</td>
       <td class="c-genre">${esc(item.genre)}</td>
-      <td style="overflow:hidden" onclick="event.stopPropagation()">
-        <div class="act-row">
-          <div class="title-l" onclick="copyClip('${item.id}')">${esc(item.title)}</div>
-          <button class="act-link" onclick="openEdit('clipboard','${item.id}')">編集</button>
-        </div>
-        <div class="act-row">
-          <div style="flex:1"></div>
-          <button class="act-link act-del" onclick="delItem('clipboard','${item.id}')">削除</button>
-        </div>
+      <td style="overflow:hidden">
+        <div class="title-l">${esc(item.title)}</div>
       </td>
       <td class="c-date">${fmtDate(item.updatedAt)}</td>
+      <td class="c-act2" onclick="event.stopPropagation()">
+        <button class="act-link" onclick="openEdit('clipboard','${item.id}')">編集</button>
+        <button class="act-link act-del" onclick="delItem('clipboard','${item.id}')">削除</button>
+      </td>
     </tr>`).join('');
 
   el.innerHTML = `
     <table class="dtable">
       <colgroup>
         <col style="width:22px"><col style="width:82px">
-        <col><col style="width:54px">
+        <col><col style="width:54px"><col style="width:36px">
       </colgroup>
       <thead><tr>
         <th></th><th>カテゴリー</th>
-        <th>タイトル</th><th>更新日</th>
+        <th>タイトル</th><th>更新日</th><th></th>
       </tr></thead>
       <tbody>
         ${rows}
-        <tr class="row-add"><td colspan="4"><button onclick="openEdit('clipboard',null)">＋ 行を追加</button></td></tr>
+        <tr class="row-add"><td colspan="5"><button onclick="openEdit('clipboard',null)">＋ 行を追加</button></td></tr>
       </tbody>
     </table>`;
 }
@@ -678,17 +707,15 @@ function renderTable(el, tab) {
           onclick="toggleDetail('${item.id}','${tab}')">
         <td class="c-drag">⠿</td>
         <td class="c-genre">${esc(item.genre)}</td>
-        <td class="c-title-url" style="overflow:hidden" onclick="event.stopPropagation()">
-          <div class="act-row">
-            <div class="title-l" onclick="toggleDetail('${item.id}','${tab}')">${esc(item.title)}</div>
-            <button class="act-link" onclick="openEdit('${tab}','${item.id}')">編集</button>
-          </div>
-          <div class="act-row">
-            ${item.url?`<div class="url-l">${esc(item.url)}</div>`:'<div style="flex:1"></div>'}
-            <button class="act-link act-del" onclick="delItem('${tab}','${item.id}')">削除</button>
-          </div>
+        <td class="c-title-url" style="overflow:hidden">
+          <div class="title-l">${esc(item.title)}</div>
+          ${item.url?`<div class="url-l">${esc(item.url)}</div>`:''}
         </td>
         <td class="c-date">${fmtDate(item.updatedAt)}</td>
+        <td class="c-act2" onclick="event.stopPropagation()">
+          <button class="act-link" onclick="openEdit('${tab}','${item.id}')">編集</button>
+          <button class="act-link act-del" onclick="delItem('${tab}','${item.id}')">削除</button>
+        </td>
       </tr>
       ${exp ? buildDetail(item,tab) : ''}
     `;
@@ -698,15 +725,15 @@ function renderTable(el, tab) {
     <table class="dtable">
       <colgroup>
         <col style="width:22px"><col style="width:82px">
-        <col><col style="width:54px">
+        <col><col style="width:54px"><col style="width:36px">
       </colgroup>
       <thead><tr>
         <th></th><th>ジャンル</th>
-        <th>タイトル / URL</th><th>更新日</th>
+        <th>タイトル / URL</th><th>更新日</th><th></th>
       </tr></thead>
       <tbody>
         ${rows}
-        <tr class="row-add"><td colspan="4"><button onclick="openEdit('${tab}',null)">＋ 行を追加</button></td></tr>
+        <tr class="row-add"><td colspan="5"><button onclick="openEdit('${tab}',null)">＋ 行を追加</button></td></tr>
       </tbody>
     </table>`;
 }
@@ -744,7 +771,7 @@ function buildDetailInner(item, tab) {
 
 function buildDetail(item, tab) {
   return `<tr class="detail-row" id="det_${item.id}">
-    <td colspan="4"><div class="detail-grid">${buildDetailInner(item,tab)}</div></td>
+    <td colspan="5"><div class="detail-grid">${buildDetailInner(item,tab)}</div></td>
   </tr>`;
 }
 
