@@ -434,6 +434,14 @@ const cache      = { clipboard:{}, links:{}, memos:{}, accounts:{} };
 // HELPERS
 // ============================================================
 const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function linkify(text) {
+  if (!text) return '';
+  return text.split(/(https?:\/\/[^\s]+)/).map((part, i) =>
+    i % 2 === 1
+      ? `<a class="detail-link" href="${esc(part)}" target="_blank" rel="noopener">${esc(part)}</a>`
+      : esc(part)
+  ).join('');
+}
 const fmtDate = ts => { if(!ts) return ''; const d=new Date(ts); return `${d.getMonth()+1}/${d.getDate()}`; };
 const emailKey  = e => e.replace(/\./g,',').replace(/@/g,'__at__');
 const keyEmail  = k => k.replace(/,/g,'.').replace(/__at__/g,'@');
@@ -723,7 +731,7 @@ function buildDetailInner(item, tab) {
           <button class="btn-pw" onclick="togglePw('${item.id}','${esc(item.password||'')}')">表示</button>
         </div>
       </div>
-      ${item.note?`<div class="detail-lbl">メモ</div><div class="detail-val">${esc(item.note)}</div>`:''}
+      ${item.note?`<div class="detail-lbl">メモ</div><div class="detail-val">${linkify(item.note)}</div>`:''}
     `;
   } else if (tab==='clipboard') {
     return `
@@ -735,7 +743,7 @@ function buildDetailInner(item, tab) {
     return `
       <div class="detail-lbl">タイトル</div><div class="detail-val">${esc(item.title)}</div>
       ${item.url?`<div class="detail-lbl">URL</div><div class="detail-val"><a class="detail-link" href="${esc(item.url)}" target="_blank" rel="noopener">${esc(item.url)}</a></div>`:''}
-      ${item.note?`<div class="detail-lbl">テキスト</div><div class="detail-val">${esc(item.note)}</div>`:''}
+      ${item.note?`<div class="detail-lbl">テキスト</div><div class="detail-val">${linkify(item.note)}</div>`:''}
     `;
   }
 }
