@@ -162,6 +162,44 @@ body {
 }
 .act-link:hover { color: var(--primary); text-decoration: underline; }
 .act-del { margin-top: 2px; }
+/* ========== GITHUB TAB ========== */
+.gh-wrap { max-width: 720px; }
+.gh-toolbar {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px; font-size: 13px;
+}
+.gh-back {
+  background: none; border: 1px solid var(--border); border-radius: 3px;
+  padding: 4px 12px; font-size: 12px; cursor: pointer; font-family: inherit;
+  color: var(--text);
+}
+.gh-back:hover { background: var(--hover); }
+.gh-repo-item {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 4px; padding: 12px 16px; margin-bottom: 8px;
+  cursor: pointer; transition: background .1s;
+}
+.gh-repo-item:hover { background: var(--hover); }
+.gh-repo-name { font-size: 14px; font-weight: bold; color: var(--primary); margin-bottom: 4px; }
+.gh-repo-desc { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+.gh-repo-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 11px; color: var(--gray2); }
+.gh-badge {
+  font-size: 10px; padding: 1px 7px; border-radius: 10px;
+  border: 1px solid var(--border); color: var(--gray2);
+}
+.gh-badge.private { border-color: var(--primary); color: var(--primary); }
+.gh-lang-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 3px; vertical-align: middle; }
+.gh-commit-item {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 4px; padding: 10px 14px; margin-bottom: 6px;
+}
+.gh-commit-msg { font-size: 13px; font-weight: bold; margin-bottom: 4px; white-space: pre-wrap; word-break: break-word; }
+.gh-commit-meta { font-size: 11px; color: var(--muted); display: flex; gap: 10px; flex-wrap: wrap; }
+.gh-sha {
+  font-family: monospace; font-size: 11px; background: #EBEBEB;
+  padding: 1px 6px; border-radius: 3px; color: var(--gray1);
+}
+.gh-loading { padding: 20px; color: var(--muted); font-size: 13px; }
 /* 設定タブ */
 .tab-icon { padding: 8px 14px !important; margin-left: auto; }
 /* 設定パネル */
@@ -359,6 +397,7 @@ body {
     <div class="tab" data-tab="accounts"  onclick="switchTab('accounts')">アカウント</div>
     <div class="tab" data-tab="memos"     onclick="switchTab('memos')">メモ</div>
     <div class="tab" data-tab="clipboard" onclick="switchTab('clipboard')">クリップボード</div>
+    <div class="tab" data-tab="github"    onclick="switchTab('github')">GitHub</div>
     <div class="tab tab-icon" data-tab="settings" onclick="switchTab('settings')">⚙</div>
   </div>
   <div id="content"></div>
@@ -554,6 +593,7 @@ function switchTab(tab) {
 function renderTab(tab) {
   const el = document.getElementById('content');
   if      (tab==='home')      renderHome(el);
+  else if (tab==='github')    renderGitHub(el);
   else if (tab==='settings')  renderSettings(el);
   else if (tab==='clipboard') renderClipboard(el);
   else                        renderTable(el,tab);
@@ -562,6 +602,123 @@ function renderTab(tab) {
 // ============================================================
 // HOME TAB
 // ============================================================
+// ============================================================
+// GITHUB TAB
+// ============================================================
+let ghToken       = null;
+let ghCurrentRepo = null; // { owner, repo, name }
+
+const LANG_COLORS = {
+  JavaScript:'#f1e05a', TypeScript:'#3178c6', Python:'#3572A5',
+  HTML:'#e34c26', CSS:'#563d7c', Shell:'#89e051',
+  Ruby:'#701516', Go:'#00ADD8', Java:'#b07219', PHP:'#4F5D95',
+  'C#':'#178600', 'C++':'#f34b7d', Rust:'#dea584', default:'#aaa'
+};
+
+async function getGhToken() {
+  if (ghToken) return ghToken;
+  try {
+    const r = await fetch('https://zerohachi-manual-default-rtdb.asia-southeast1.firebasedatabase.app/config/github.json');
+    const d = await r.json();
+    ghToken = d?.token || null;
+  } catch(e) { ghToken = null; }
+  return ghToken;
+}
+
+async function ghFetch(path) {
+  const token = await getGhToken();
+  const r = await fetch('https://api.github.com' + path, {
+    headers: {
+      'Authorization': 'token ' + token,
+      'Accept': 'application/vnd.github+json'
+    }
+  });
+  if (!r.ok) throw new Error(r.status + ' ' + r.statusText);
+  return r.json();
+}
+
+function fmtGhDate(iso) {
+  const d = new Date(iso);
+  return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+async function renderGitHub(el) {
+  el.innerHTML = '<div class="gh-loading">読み込み中...</div>';
+  try {
+    if (ghCurrentRepo) {
+      await renderGhCommits(el);
+    } else {
+      await renderGhRepos(el);
+    }
+  } catch(e) {
+    el.innerHTML = `<div class="gh-loading" style="color:var(--primary)">エラー: ${esc(e.message)}</div>`;
+  }
+}
+
+async function renderGhRepos(el) {
+  const repos = await ghFetch('/user/repos?per_page=100&sort=updated&affiliation=owner,organization_member');
+
+  const rows = repos.map(r => {
+    const lang  = r.language || '';
+    const color = LANG_COLORS[lang] || LANG_COLORS.default;
+    const desc  = r.description ? `<div class="gh-repo-desc">${esc(r.description)}</div>` : '';
+    return `
+      <div class="gh-repo-item" onclick="openGhRepo('${esc(r.owner.login)}','${esc(r.name)}')">
+        <div class="gh-repo-name">${esc(r.owner.login)}/${esc(r.name)}</div>
+        ${desc}
+        <div class="gh-repo-meta">
+          <span class="gh-badge${r.private?' private':''}">${r.private?'Private':'Public'}</span>
+          ${lang ? `<span><span class="gh-lang-dot" style="background:${color}"></span>${esc(lang)}</span>` : ''}
+          <span>更新: ${fmtGhDate(r.updated_at)}</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="gh-wrap">
+      <div class="gh-toolbar">
+        <span style="font-weight:bold">${repos.length} リポジトリ</span>
+      </div>
+      ${rows || '<div class="gh-loading">リポジトリなし</div>'}
+    </div>`;
+}
+
+function openGhRepo(owner, repo) {
+  ghCurrentRepo = { owner, repo };
+  renderTab('github');
+}
+
+async function renderGhCommits(el) {
+  const { owner, repo } = ghCurrentRepo;
+  const commits = await ghFetch(`/repos/${owner}/${repo}/commits?per_page=30`);
+
+  const rows = commits.map(c => {
+    const msg    = c.commit.message.split('\n')[0];
+    const author = c.commit.author.name;
+    const date   = fmtGhDate(c.commit.author.date);
+    const sha    = c.sha.slice(0,7);
+    return `
+      <div class="gh-commit-item">
+        <div class="gh-commit-msg">${esc(msg)}</div>
+        <div class="gh-commit-meta">
+          <span>${esc(author)}</span>
+          <span>${date}</span>
+          <span class="gh-sha">${sha}</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="gh-wrap">
+      <div class="gh-toolbar">
+        <button class="gh-back" onclick="ghCurrentRepo=null;renderTab('github')">← 一覧に戻る</button>
+        <strong>${esc(owner)}/${esc(repo)}</strong>
+        <span style="color:var(--muted);font-size:12px">${commits.length}件のコミット</span>
+      </div>
+      ${rows || '<div class="gh-loading">コミットなし</div>'}
+    </div>`;
+}
+
 // ============================================================
 // SETTINGS TAB
 // ============================================================
