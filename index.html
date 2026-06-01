@@ -398,6 +398,7 @@ body {
     <div class="tab" data-tab="memos"     onclick="switchTab('memos')">メモ</div>
     <div class="tab" data-tab="clipboard" onclick="switchTab('clipboard')">クリップボード</div>
     <div class="tab" data-tab="github"    onclick="switchTab('github')">GitHub</div>
+    <div class="tab" data-tab="skills"    onclick="switchTab('skills')">スキル</div>
     <div class="tab tab-icon" data-tab="settings" onclick="switchTab('settings')">⚙</div>
   </div>
   <div id="content"></div>
@@ -594,6 +595,7 @@ function renderTab(tab) {
   const el = document.getElementById('content');
   if      (tab==='home')      renderHome(el);
   else if (tab==='github')    renderGitHub(el);
+  else if (tab==='skills')    renderSkills(el);
   else if (tab==='settings')  renderSettings(el);
   else if (tab==='clipboard') renderClipboard(el);
   else                        renderTable(el,tab);
@@ -717,6 +719,62 @@ async function renderGhCommits(el) {
       </div>
       ${rows || '<div class="gh-loading">コミットなし</div>'}
     </div>`;
+}
+
+// ============================================================
+// SKILLS TAB
+// ============================================================
+let skillsCache = null;
+async function renderSkills(el) {
+  el.innerHTML = '<div style="padding:24px;color:#777">読み込み中...</div>';
+  try {
+    if (!skillsCache) {
+      const res = await fetch('skills.json?t=' + Date.now());
+      skillsCache = await res.json();
+    }
+    const data = skillsCache;
+    const cats = data.categories.map(cat => {
+      const rows = cat.skills.map(s => `
+        <div class="skill-row">
+          <div class="skill-name"><code>${esc(s.name)}</code>${s.project?` <span class="skill-tag">${esc(s.project)}</span>`:''}</div>
+          <div class="skill-desc">${esc(s.desc||'(説明なし)')}</div>
+        </div>`).join('');
+      return `
+        <div class="skill-cat">
+          <div class="skill-cat-hdr">
+            <span>${cat.icon||'•'} ${esc(cat.name)}</span>
+            <span class="skill-count">${cat.skills.length}件</span>
+          </div>
+          <div class="skill-list">${rows}</div>
+        </div>`;
+    }).join('');
+    el.innerHTML = `
+      <div style="padding:14px 18px;max-width:1000px;margin:0 auto">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+          <h2 style="font-size:18px;color:var(--primary);margin:0">📋 Claude Code スキル一覧</h2>
+          <span style="font-size:11px;color:var(--muted)">最終更新: ${esc(data.generated_at||'-')}</span>
+          <button onclick="skillsCache=null;renderSkills(document.getElementById('content'))" style="margin-left:auto;padding:4px 10px;font-size:11px;background:var(--white);border:1px solid var(--border);border-radius:4px;cursor:pointer">🔄 再読込</button>
+        </div>
+        ${cats}
+        <div style="margin-top:18px;padding:10px;background:var(--white);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--muted)">
+          💡 更新方法：Claude Code で「<code>/skills-sync</code>」または「スキル一覧を更新して」と依頼
+        </div>
+      </div>
+      <style>
+        .skill-cat { background:var(--white); border:1px solid var(--border); border-radius:6px; margin-bottom:12px; overflow:hidden; }
+        .skill-cat-hdr { display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:#fafafa; border-bottom:1px solid var(--border); font-weight:bold; color:var(--secondary); font-size:13px; }
+        .skill-count { font-size:11px; color:var(--muted); font-weight:normal; }
+        .skill-list { padding:4px 0; }
+        .skill-row { display:grid; grid-template-columns:240px 1fr; gap:12px; padding:8px 14px; border-bottom:1px solid #f0f0f0; font-size:12px; }
+        .skill-row:last-child { border-bottom:none; }
+        .skill-row:hover { background:#fafafa; }
+        .skill-name code { background:#f3f3f3; padding:2px 6px; border-radius:3px; font-size:11px; color:var(--primary); }
+        .skill-tag { display:inline-block; background:#e8eef7; color:#2a5599; padding:1px 6px; border-radius:3px; font-size:10px; margin-left:4px; }
+        .skill-desc { color:var(--gray1); line-height:1.5; }
+      </style>`;
+  } catch(e) {
+    el.innerHTML = '<div style="padding:24px;color:#c33">読み込みエラー: ' + esc(e.message) + '</div>';
+  }
 }
 
 // ============================================================
