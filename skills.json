@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02",
+  "generated_at": "2026-06-03",
   "categories": [
     {
       "name": "ユーザースキル",
@@ -64,10 +64,13 @@
       "name": "プロジェクト固有コマンド",
       "icon": "📁",
       "skills": [
+    {"name":"git-tasks","desc":"現在のリポジトリの GitHub Issue を一覧表示する（初心者向けGUI形式・Task list進捗バー付き）。「タスク教えて」でも起動。","project":"frontjournal"},
     {"name":"update-spec","desc":"仕様書（docs/SPEC.md）を最新の変更内容に同期し、Git にコミット＆プッシュ。Google ドライブにもコピー保存する。","project":"frontjournal"},
+    {"name":"frontjour-summary","desc":"Slack #frontjour に共有された参考記事URLを定型フォーマットで要約し、ドライブのログファイルに追記＋Slackスレッドへ返信する。","project":"frontjournal"},
     {"name":"design-critique","desc":"Designerロールで UI/レイアウトを批評する（参考URL・スクショ持ち込み歓迎）","project":"readnavi"},
     {"name":"plan","desc":"機能追加・改修の設計ドラフトを出す（Engineering Manager + CEOロール）","project":"readnavi"},
     {"name":"review","desc":"WEBサイトのカード・余白・タイポを横断審査する（QA/Designerロール）","project":"readnavi"},
+    {"name":"git-tasks","desc":"現在のリポジトリの GitHub Issue を一覧表示する（初心者向けGUI形式・Task list進捗バー付き）。「タスク教えて」でも起動。","project":"zerohachi"},
     {"name":"daily-log","desc":"本日の作業ログ＋プロジェクト別タスク一覧を表示。必ず末尾に「ご利用メニュー＋タスク一覧」パネルを表示する。","project":"zerohachi"}
       ]
     }
