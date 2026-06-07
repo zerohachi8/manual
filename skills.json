@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03",
+  "generated_at": "2026-06-08",
   "categories": [
     {
       "name": "コーディング・開発",
@@ -10,6 +10,7 @@
         {"name":"code-review","desc":"コード変更レビュー（セキュリティ・パフォーマンス・正しさ・N+1・インジェクション・エッジケース）","category":"code"},
         {"name":"debug","desc":"構造化デバッグ（再現→切り分け→診断→修正）。エラーログ、本番/staging差分の調査","category":"code"},
         {"name":"testing-strategy","desc":"テスト戦略・テスト計画の設計。カバレッジ・テストピラミッド・テスト構成","category":"code"},
+        {"name":"playwright","desc":"自然言語でブラウザ操作（クリック・入力・スクショ・PDF化）。ログイン要サイトの情報収集・定期投稿・E2Eテストを自動化","category":"code"},
         {"name":"init","desc":"プロジェクト用 CLAUDE.md を自動生成","category":"code"},
         {"name":"run","desc":"プロジェクトのアプリを起動して動作確認","category":"code"},
         {"name":"verify","desc":"コード変更が要件通り動くかアプリ起動で検証","category":"code"},
@@ -30,7 +31,8 @@
         {"name":"design-handoff","desc":"デザイン→エンジニア向け仕様書を生成（レイアウト・デザイントークン・状態・アニメーション・レスポンシブ）","category":"design"},
         {"name":"design-system","desc":"デザインシステムの監査・ドキュメント化・拡張。命名一貫性、ハードコード値検出、新パターン設計","category":"design"},
         {"name":"undraw-fetch","desc":"unDraw API から SVG イラストを自動取得（MIT・商用OK・帰属表示不要）。スライド/HTML/画像作成時に自動適用","category":"design"},
-        {"name":"ux-copy","desc":"UXコピーの作成・レビュー。ボタン文言・エラーメッセージ・空状態・CTA・オンボ文言","category":"design"}
+        {"name":"ux-copy","desc":"UXコピーの作成・レビュー。ボタン文言・エラーメッセージ・空状態・CTA・オンボ文言","category":"design"},
+        {"name":"frontend-design","desc":"洗練されたUIのHTML/CSS/JSを自動生成。「AIで作った感」を排除したモダンなLP・コーポレートサイト構築。UI作業中に自動起動","category":"design"}
       ]
     },
     {
@@ -40,6 +42,7 @@
       "skills": [
         {"name":"documentation","desc":"技術文書の執筆（README・APIドキュメント・アーキテクチャ文書・運用Runbook・オンボーディング）","category":"docs"},
         {"name":"pdf-import","desc":"PDF・スライド・画像を Google ドライブ「他社資料・セミナー」フォルダへ整理保存。YYMMDD_ 命名で要約付き","category":"docs"},
+        {"name":"natural-japanese","desc":"AIっぽい機械的な日本語を、人間らしい自然な文章にリライト。note記事・ブログ・SNS・メール本文に。reference/に過去記事を置くとトーン再現","category":"docs"},
         {"name":"youtube-import","desc":"YouTube動画URLを検出すると自動起動。文字起こし＋要約＋Wordドキュメント保存を一括実行","category":"docs"},
         {"name":"anthropic-skills:docx","desc":"Word 文書（.docx）の作成・編集・読み取り","category":"docs"},
         {"name":"anthropic-skills:pdf","desc":"PDF 操作（結合・分割・OCR・フォーム入力・暗号化）","category":"docs"},
@@ -81,6 +84,9 @@
       "icon": "⚙️",
       "desc": "設定ファイル・キーバインド・定期実行・スキル管理など Claude Code 自体の運用",
       "skills": [
+        {"name":"claude-code-setup","desc":"プロジェクトを診断してClaude Code活用法を提案。package.json・言語・既存設定を分析し、Hooks/Agent/Skillの推奨を返す","category":"config"},
+        {"name":"claude-md-management","desc":"CLAUDE.mdファイルを監査・整理。品質スコア化・不足項目の提案・/revise-claude-md でセッション学びを自動追記","category":"config"},
+        {"name":"superpowers","desc":"思考プロセスを構造化（要件深掘り→計画→TDD→検証）。20+のワークフローで回答品質を底上げ。壁打ち・仕様検討に強力","category":"config"},
         {"name":"anthropic-skills:consolidate-memory","desc":"メモリファイル整理（重複統合・古い情報除去）","category":"config"},
         {"name":"anthropic-skills:setup-cowork","desc":"Cowork プラグインの初期セットアップガイド","category":"config"},
         {"name":"anthropic-skills:skill-creator","desc":"スキルの新規作成・既存スキル改善・性能測定","category":"config"},
