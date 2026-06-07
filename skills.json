@@ -84,7 +84,7 @@
       "icon": "⚙️",
       "desc": "設定ファイル・キーバインド・定期実行・スキル管理など Claude Code 自体の運用",
       "skills": [
-        {"name":"approval-workflow","desc":"🛑 伊藤様の指示に対して勝手に実行せず「要件定義→調査→提案→承認待ち」の3ステップを必ず踏む。全タスクで自動適用。承認なしの先行実行を防ぐ","category":"config"},
+        {"name":"approval-workflow","desc":"🛑 メッセージに「要件定義」が含まれていたら起動。「要件定義→調査→提案→承認待ち」の3ステップを必ず踏み、承認なしの先行実行を防ぐ","category":"config"},
         {"name":"claude-code-setup","desc":"プロジェクトを診断してClaude Code活用法を提案。package.json・言語・既存設定を分析し、Hooks/Agent/Skillの推奨を返す","category":"config"},
         {"name":"claude-md-management","desc":"CLAUDE.mdファイルを監査・整理。品質スコア化・不足項目の提案・/revise-claude-md でセッション学びを自動追記","category":"config"},
         {"name":"superpowers","desc":"思考プロセスを構造化（要件深掘り→計画→TDD→検証）。20+のワークフローで回答品質を底上げ。壁打ち・仕様検討に強力","category":"config"},
