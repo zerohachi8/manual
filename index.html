@@ -781,6 +781,57 @@ async function renderSkills(el) {
           <button class="skills-reload" onclick="skillsCache=null;renderSkills(document.getElementById('content'))">🔄 再読込</button>
         </div>
         <nav class="skill-nav">${nav}</nav>
+        <details class="skill-howto" open>
+          <summary>🆕 新着スキルの使い方（2026-06 追加）</summary>
+          <div class="skill-howto-body">
+
+            <div class="howto-item">
+              <h3>🎨 frontend-design <span class="howto-cat">デザイン</span></h3>
+              <p><b>何ができる：</b>「AIで作った感」のないモダンなUI（HTML/CSS/JS）を自動生成。LP・コーポレートサイト・カードUIに強い。</p>
+              <p><b>使い方：</b>UI関連の依頼で自動起動するが、明示するなら <code>frontend-designでLPを作って</code> のように呼ぶ。</p>
+              <p><b>例：</b>「ゼロハチのコーポLPを <code>frontend-design</code> で作って。ヒーロー＋実績3つ＋お問い合わせ」</p>
+            </div>
+
+            <div class="howto-item">
+              <h3>🎭 playwright <span class="howto-cat">自動化</span></h3>
+              <p><b>何ができる：</b>自然言語でブラウザを操作。ログイン要サイトでも動く。スクショ・PDF化・フォーム入力・定期投稿の自動化。</p>
+              <p><b>使い方：</b><code>playwrightで〇〇サイトにログインして△△を取得して</code> と依頼。ID/PW入力は自己責任。</p>
+              <p><b>例：</b>「<code>playwright</code> で note.com にアクセスして、ダッシュボードのアクセス数をスクショして」</p>
+              <p><b>注意：</b>初回起動時はブラウザのインストールが走る（数分）。</p>
+            </div>
+
+            <div class="howto-item">
+              <h3>🔧 claude-code-setup <span class="howto-cat">運用</span></h3>
+              <p><b>何ができる：</b>現在のプロジェクトを診断し、Claude Code をどう活用すべきか提案する「専属コンサル」。</p>
+              <p><b>使い方：</b>プロジェクトのルートで「<code>claude-code-setup で分析して</code>」または「このプロジェクトでClaudeCodeをどう活用すべき？」。</p>
+              <p><b>例：</b>frontjournal リポで起動 → 「テスト用フックを設定すると良い」「記事下書きSubagentを作るべき」等を返す。</p>
+            </div>
+
+            <div class="howto-item">
+              <h3>📝 claude-md-management <span class="howto-cat">運用</span></h3>
+              <p><b>何ができる：</b>CLAUDE.md の品質を採点し、不足項目を提案。セッション終わりに学びを自動追記。</p>
+              <p><b>使い方：</b>セッション末で <code>/revise-claude-md</code> を実行 → 提案された差分を確認 → 承認で反映。</p>
+              <p><b>例：</b>1日の作業終わりに <code>/revise-claude-md</code> → 「README更新コマンド」「ハマったポイント」が自動で CLAUDE.md に追加される。</p>
+            </div>
+
+            <div class="howto-item">
+              <h3>💪 superpowers <span class="howto-cat">思考</span></h3>
+              <p><b>何ができる：</b>回答の質を底上げ。要件深掘り→計画→TDD→検証 の構造化ワークフローで、抜け漏れを防ぐ。</p>
+              <p><b>使い方：</b>仕様検討や壁打ちの時に「<code>superpowers</code> モードで考えて」と前置きする。</p>
+              <p><b>例：</b>「<code>/brainstorm</code> 新機能のアイデアを壁打ちしたい」「<code>/write-plan</code> ログイン機能の実装計画を作って」</p>
+              <p><b>違い：</b>通常は即実装に走るが、superpowers有効時は <b>計画→ユーザー承認→テスト→実装→検証</b> の順を守る。</p>
+            </div>
+
+            <div class="howto-item">
+              <h3>🇯🇵 natural-japanese <span class="howto-cat">執筆</span></h3>
+              <p><b>何ができる：</b>AIっぽい機械的な日本語を、人間らしい自然な文体にリライト。note・ブログ・メール・Slack 投稿に。</p>
+              <p><b>使い方：</b>「<code>自然な日本語にして</code>」「<code>noteっぽくリライトして</code>」で起動。</p>
+              <p><b>精度を上げるコツ：</b><code>~/.claude/skills/natural-japanese/reference/</code> に過去のnote記事を <code>.md</code> で置く → 伊藤様のトーンを学習する。</p>
+              <p><b>例：</b>「下書きの note 記事を <code>natural-japanese</code> でリライトして。Before/Afterで出して」</p>
+            </div>
+
+          </div>
+        </details>
         ${sections}
         <div class="skills-footer">
           💡 更新方法：Claude Code で「<code>/skills-sync</code>」または「スキル一覧を更新して」と依頼
@@ -812,7 +863,18 @@ async function renderSkills(el) {
         .skill-card-desc { color:var(--gray1); line-height:1.65; font-size:13px; }
         .skills-footer { margin-top:20px; padding:14px 18px; background:var(--white); border:1px solid var(--border); border-radius:6px; font-size:12px; color:var(--gray2); }
         .skills-footer code { background:#f3eaea; color:var(--primary); padding:2px 6px; border-radius:3px; font-family:'SF Mono','Menlo','Consolas',monospace; }
-        @media (max-width:600px) { .skill-grid { grid-template-columns:1fr; } .skills-h2 { font-size:18px; } }
+        .skill-howto { background:#fffbe6; border:1px solid #ffe58f; border-radius:8px; margin-bottom:20px; padding:0; }
+        .skill-howto > summary { padding:12px 18px; font-size:15px; font-weight:bold; color:#874d00; cursor:pointer; list-style:none; user-select:none; }
+        .skill-howto > summary::-webkit-details-marker { display:none; }
+        .skill-howto > summary::before { content:'▶ '; font-size:11px; color:#b08200; }
+        .skill-howto[open] > summary::before { content:'▼ '; }
+        .skill-howto-body { padding:4px 18px 18px; display:grid; grid-template-columns:repeat(auto-fill, minmax(420px,1fr)); gap:12px; }
+        .howto-item { background:#fff; border:1px solid #ffe58f; border-radius:6px; padding:12px 14px; }
+        .howto-item h3 { margin:0 0 8px; font-size:15px; color:var(--secondary); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+        .howto-cat { font-size:10px; background:var(--primary); color:#fff; padding:2px 8px; border-radius:10px; font-weight:bold; }
+        .howto-item p { margin:5px 0; font-size:12.5px; line-height:1.65; color:var(--gray1); }
+        .howto-item code { background:#f3eaea; color:var(--primary); padding:1px 6px; border-radius:3px; font-size:12px; font-family:'SF Mono','Menlo','Consolas',monospace; }
+        @media (max-width:600px) { .skill-grid, .skill-howto-body { grid-template-columns:1fr; } .skills-h2 { font-size:18px; } }
       </style>`;
   } catch(e) {
     el.innerHTML = '<div style="padding:24px;color:#c33">読み込みエラー: ' + esc(e.message) + '</div>';
