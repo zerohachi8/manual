@@ -785,6 +785,14 @@ async function renderSkills(el) {
           <summary>🆕 新着スキルの使い方（2026-06 追加）</summary>
           <div class="skill-howto-body">
 
+            <div class="howto-item" style="border:2px solid #ff4d4f; background:#fff1f0;">
+              <h3>🛑 approval-workflow <span class="howto-cat" style="background:#ff4d4f; color:#fff;">最重要</span></h3>
+              <p><b>何ができる：</b>「要件定義」「要求定義」「提案して」のいずれかを含むと自動起動。<b>要件定義 → 調査 → 複数案提案 → 承認待ち → ソース明記</b>の5ステップを、見出し・箇条書き・テーブルで視認性高く出力。Claudeが勝手に実装するのを構造的に防ぐ。</p>
+              <p><b>使い方：</b>普段の依頼の先頭に <code>要件定義</code> を付けるだけ。例：<code>要件定義 Slackに投稿して</code></p>
+              <p><b>例：</b>「<code>要件定義</code> ゼロハチLPのトップに新着セクションを追加して」→ 5ステップで提案 → 承認後に実装</p>
+              <p><b>📁 ファイル：</b><code>~/.claude/skills/approval-workflow/SKILL.md</code></p>
+            </div>
+
             <div class="howto-item">
               <h3>🎨 frontend-design <span class="howto-cat">デザイン</span></h3>
               <p><b>何ができる：</b>「AIで作った感」のないモダンなUI（HTML/CSS/JS）を自動生成。LP・コーポレートサイト・カードUIに強い。</p>
