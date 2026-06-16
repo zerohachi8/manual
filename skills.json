@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-15",
+  "generated_at": "2026-06-17",
   "categories": [
     {
       "name": "コーディング・開発",
@@ -40,6 +40,7 @@
       "icon": "📝",
       "desc": "Word/PDF/PowerPoint/Excel の作成・編集、技術文書、PDF/動画の取り込み",
       "skills": [
+        {"name":"progress-report","desc":"「進捗報告」「社長報告」「/progress-report」で起動。Git履歴・TASKS.md・GitHub Issueから完了/未完了を自動抽出し、社長報告用プレーンテキストを生成。初見でも理解できる体言止め・【】■・区切り・「／」まとめで出力。出力前に3観点でダブルチェック","category":"docs"},
         {"name":"documentation","desc":"技術文書の執筆（README・APIドキュメント・アーキテクチャ文書・運用Runbook・オンボーディング）","category":"docs"},
         {"name":"pdf-import","desc":"PDF・スライド・画像を Google ドライブ「他社資料・セミナー」フォルダへ整理保存。YYMMDD_ 命名で要約付き","category":"docs"},
         {"name":"natural-japanese","desc":"AIっぽい機械的な日本語を、人間らしい自然な文章にリライト。note記事・ブログ・SNS・メール本文に。reference/に過去記事を置くとトーン再現","category":"docs"},
