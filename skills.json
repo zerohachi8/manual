@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-17",
+  "generated_at": "2026-06-18",
   "categories": [
     {
       "name": "コーディング・開発",
@@ -31,6 +31,9 @@
         {"name":"design-handoff","desc":"デザイン→エンジニア向け仕様書を生成（レイアウト・デザイントークン・状態・アニメーション・レスポンシブ）","category":"design"},
         {"name":"design-system","desc":"デザインシステムの監査・ドキュメント化・拡張。命名一貫性、ハードコード値検出、新パターン設計","category":"design"},
         {"name":"undraw-fetch","desc":"unDraw API から SVG イラストを自動取得（MIT・商用OK・帰属表示不要）。スライド/HTML/画像作成時に自動適用","category":"design"},
+        {"name":"drawkit-fetch","desc":"DrawKit の無料イラストパックをローカルキャッシュから検索して埋め込む半自動スキル。`/drawkit-fetch` で呼び出す。初回のみ手動DL、2回目以降はキャッシュ自動取得","category":"design"},
+        {"name":"pixabay-fetch","desc":"Pixabay API から記事サムネ・バナー用の写真を取得。3候補生成→確認→採点→採用の半自動フロー。商用OK・帰属表示不要。「サムネ画像が欲しい」「背景写真」で起動","category":"design"},
+        {"name":"svgrepo-fetch","desc":"SVGRepo から50万点超のSVGを取得して埋め込む。スライド・HTML・バナー・サムネ作成時に。CC0/MIT中心（商用OK）。unDrawに無い素材の代替として使う","category":"design"},
         {"name":"ux-copy","desc":"UXコピーの作成・レビュー。ボタン文言・エラーメッセージ・空状態・CTA・オンボ文言","category":"design"},
         {"name":"frontend-design","desc":"洗練されたUIのHTML/CSS/JSを自動生成。「AIで作った感」を排除したモダンなLP・コーポレートサイト構築。UI作業中に自動起動","category":"design"}
       ]
