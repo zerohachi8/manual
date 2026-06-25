@@ -531,8 +531,9 @@ function doSignIn() {
 function doSignOut() { auth.signOut(); }
 
 auth.onAuthStateChanged(async user => {
-  if (!user) { show('login'); detachAll(); currentUser=null; return; }
+  if (!user) { show('login'); detachAll(); currentUser=null; starredSkills={}; starredLoaded=false; return; }
   currentUser = user;
+  starredLoaded = false;  // 再ログイン時に再読込
   const role  = await checkAccess(user);
   currentRole = role;
   if (role === 'denied') {
@@ -725,6 +726,53 @@ async function renderGhCommits(el) {
 // SKILLS TAB
 // ============================================================
 let skillsCache = null;
+let starredSkills = {};      // { "approval-workflow": true, ... }
+let starredLoaded = false;
+
+// Firebase: /users/{uid}/starredSkills/{name} = true
+function starredRef() {
+  if (!currentUser) return null;
+  return db.ref(`users/${currentUser.uid}/starredSkills`);
+}
+async function loadStarred() {
+  const ref = starredRef();
+  if (!ref) { starredSkills = {}; starredLoaded = true; return; }
+  const snap = await ref.once('value');
+  starredSkills = snap.val() || {};
+  starredLoaded = true;
+}
+async function toggleStar(name, btnEl) {
+  const ref = starredRef();
+  if (!ref) { alert('ログインが必要です'); return; }
+  if (starredSkills[name]) {
+    delete starredSkills[name];
+    await ref.child(name).remove();
+  } else {
+    starredSkills[name] = true;
+    await ref.child(name).set(true);
+  }
+  renderSkills(document.getElementById('content'));
+}
+async function copySkillName(name, el) {
+  try {
+    await navigator.clipboard.writeText(name);
+    el.classList.add('skill-copied');
+    setTimeout(()=>el.classList.remove('skill-copied'), 700);
+  } catch(e) { console.error(e); }
+}
+
+function renderSkillRow(s) {
+  const isStar = !!starredSkills[s.name];
+  const star = `<button class="skill-star${isStar?' on':''}" onclick="event.stopPropagation();toggleStar('${esc(s.name)}',this)" title="${isStar?'重要を解除':'重要に登録'}">${isStar?'★':'☆'}</button>`;
+  const code = `<code class="skill-code${isStar?' important':''}" onclick="copySkillName('${esc(s.name)}',this)" title="クリックでコピー">${esc(s.name)}</code>`;
+  const tag = s.project?`<span class="skill-tag">${esc(s.project)}</span>`:'';
+  return `<tr>
+    <td class="skill-td-star">${star}</td>
+    <td class="skill-td-name">${code}${tag}</td>
+    <td class="skill-td-desc">${esc(s.desc||'(説明なし)')}</td>
+  </tr>`;
+}
+
 async function renderSkills(el) {
   el.innerHTML = '<div style="padding:24px;color:#777">読み込み中...</div>';
   try {
@@ -732,31 +780,32 @@ async function renderSkills(el) {
       const res = await fetch('skills.json?t=' + Date.now());
       skillsCache = await res.json();
     }
+    if (!starredLoaded) await loadStarred();
     const data = skillsCache;
-    const cats = data.categories.map(cat => {
-      const rows = cat.skills.map(s => `
-        <div class="skill-row">
-          <div class="skill-name"><code>${esc(s.name)}</code>${s.project?` <span class="skill-tag">${esc(s.project)}</span>`:''}</div>
-          <div class="skill-desc">${esc(s.desc||'(説明なし)')}</div>
-        </div>`).join('');
-      return `
-        <div class="skill-cat">
-          <div class="skill-cat-hdr">
-            <span>${cat.icon||'•'} ${esc(cat.name)}</span>
-            <span class="skill-count">${cat.skills.length}件</span>
-          </div>
-          <div class="skill-list">${rows}</div>
-        </div>`;
-    }).join('');
     const totalCount = data.categories.reduce((a,c)=>a+c.skills.length,0);
     // ナビゲーション
     const nav = data.categories.map((c,i)=>`<a href="#skcat-${i}" class="skill-nav-pill"><span>${c.icon||'•'}</span> ${esc(c.name)} <span class="skill-nav-count">${c.skills.length}</span></a>`).join('');
+    // 全スキルを集約してスター付きを抽出（重複除去）
+    const allSkills = [];
+    const seen = new Set();
+    data.categories.forEach(cat => cat.skills.forEach(s => {
+      if (seen.has(s.name)) return;
+      seen.add(s.name);
+      allSkills.push(s);
+    }));
+    const starred = allSkills.filter(s => starredSkills[s.name])
+      .sort((a,b)=>a.name.localeCompare(b.name));
+    const starredSection = starred.length ? `
+      <section class="skill-cat skill-cat-important" id="skcat-important">
+        <div class="skill-cat-hdr">
+          <span class="skill-cat-icon">⭐</span>
+          <span class="skill-cat-title">重要（よく使う）</span>
+          <span class="skill-count">${starred.length} 件</span>
+        </div>
+        <table class="skill-table">${starred.map(renderSkillRow).join('')}</table>
+      </section>` : '';
     const sections = data.categories.map((cat,i) => {
-      const rows = cat.skills.map(s => `
-        <tr>
-          <td class="skill-td-name"><code>${esc(s.name)}</code>${s.project?`<span class="skill-tag">${esc(s.project)}</span>`:''}</td>
-          <td class="skill-td-desc">${esc(s.desc||'(説明なし)')}</td>
-        </tr>`).join('');
+      const rows = cat.skills.map(renderSkillRow).join('');
       return `
         <section class="skill-cat" id="skcat-${i}">
           <div class="skill-cat-hdr">
@@ -778,73 +827,7 @@ async function renderSkills(el) {
           <button class="skills-reload" onclick="skillsCache=null;renderSkills(document.getElementById('content'))">🔄 再読込</button>
         </div>
         <nav class="skill-nav">${nav}</nav>
-        <details class="skill-howto" open>
-          <summary>🆕 新着スキルの使い方（2026-06 追加）</summary>
-          <div class="skill-howto-body">
-
-            <div class="howto-item" style="border:2px solid #ff4d4f; background:#fff1f0;">
-              <h3>🛑 approval-workflow <span class="howto-cat" style="background:#ff4d4f; color:#fff;">最重要</span></h3>
-              <p><b>何ができる：</b>「要件定義」「要求定義」「提案して」のいずれかを含むと自動起動。<b>要件定義 → 調査 → 複数案提案 → 承認待ち → ソース明記</b>の5ステップを、見出し・箇条書き・テーブルで視認性高く出力。Claudeが勝手に実装するのを構造的に防ぐ。</p>
-              <p><b>使い方：</b>普段の依頼の先頭に <code>要件定義</code> を付けるだけ。例：<code>要件定義 Slackに投稿して</code></p>
-              <p><b>例：</b>「<code>要件定義</code> ゼロハチLPのトップに新着セクションを追加して」→ 5ステップで提案 → 承認後に実装</p>
-              <p><b>📁 ファイル：</b><code>~/.claude/skills/approval-workflow/SKILL.md</code></p>
-            </div>
-
-            <div class="howto-item" style="border:2px solid #1677ff; background:#f0f7ff;">
-              <h3>📊 progress-report <span class="howto-cat" style="background:#1677ff; color:#fff;">社長報告</span></h3>
-              <p><b>何ができる：</b>「進捗報告」「社長報告」と打つと、Git履歴・TASKS.md・GitHub Issueから各プロジェクトの「完了／未完了」を自動抽出し、社長報告用のプレーンテキストを生成。初見でも分かる体言止め・【】■・区切りで出力。</p>
-              <p><b>使い方：</b><code>進捗報告</code> または <code>/progress-report</code> と打つだけ。日付・曜日は自動挿入。</p>
-              <p><b>例：</b>「<code>社長報告</code> 今週のゼロハチ全プロジェクトの進捗まとめて」</p>
-              <p><b>📁 ファイル：</b><code>~/.claude/skills/progress-report/SKILL.md</code></p>
-            </div>
-
-            <div class="howto-item">
-              <h3>🎨 frontend-design <span class="howto-cat">デザイン</span></h3>
-              <p><b>何ができる：</b>「AIで作った感」のないモダンなUI（HTML/CSS/JS）を自動生成。LP・コーポレートサイト・カードUIに強い。</p>
-              <p><b>使い方：</b>UI関連の依頼で自動起動するが、明示するなら <code>frontend-designでLPを作って</code> のように呼ぶ。</p>
-              <p><b>例：</b>「ゼロハチのコーポLPを <code>frontend-design</code> で作って。ヒーロー＋実績3つ＋お問い合わせ」</p>
-            </div>
-
-            <div class="howto-item">
-              <h3>🎭 playwright <span class="howto-cat">自動化</span></h3>
-              <p><b>何ができる：</b>自然言語でブラウザを操作。ログイン要サイトでも動く。スクショ・PDF化・フォーム入力・定期投稿の自動化。</p>
-              <p><b>使い方：</b><code>playwrightで〇〇サイトにログインして△△を取得して</code> と依頼。ID/PW入力は自己責任。</p>
-              <p><b>例：</b>「<code>playwright</code> で note.com にアクセスして、ダッシュボードのアクセス数をスクショして」</p>
-              <p><b>注意：</b>初回起動時はブラウザのインストールが走る（数分）。</p>
-            </div>
-
-            <div class="howto-item">
-              <h3>🔧 claude-code-setup <span class="howto-cat">運用</span></h3>
-              <p><b>何ができる：</b>現在のプロジェクトを診断し、Claude Code をどう活用すべきか提案する「専属コンサル」。</p>
-              <p><b>使い方：</b>プロジェクトのルートで「<code>claude-code-setup で分析して</code>」または「このプロジェクトでClaudeCodeをどう活用すべき？」。</p>
-              <p><b>例：</b>frontjournal リポで起動 → 「テスト用フックを設定すると良い」「記事下書きSubagentを作るべき」等を返す。</p>
-            </div>
-
-            <div class="howto-item">
-              <h3>📝 claude-md-management <span class="howto-cat">運用</span></h3>
-              <p><b>何ができる：</b>CLAUDE.md の品質を採点し、不足項目を提案。セッション終わりに学びを自動追記。</p>
-              <p><b>使い方：</b>セッション末で <code>/revise-claude-md</code> を実行 → 提案された差分を確認 → 承認で反映。</p>
-              <p><b>例：</b>1日の作業終わりに <code>/revise-claude-md</code> → 「README更新コマンド」「ハマったポイント」が自動で CLAUDE.md に追加される。</p>
-            </div>
-
-            <div class="howto-item">
-              <h3>💪 superpowers <span class="howto-cat">思考</span></h3>
-              <p><b>何ができる：</b>回答の質を底上げ。要件深掘り→計画→TDD→検証 の構造化ワークフローで、抜け漏れを防ぐ。</p>
-              <p><b>使い方：</b>仕様検討や壁打ちの時に「<code>superpowers</code> モードで考えて」と前置きする。</p>
-              <p><b>例：</b>「<code>/brainstorm</code> 新機能のアイデアを壁打ちしたい」「<code>/write-plan</code> ログイン機能の実装計画を作って」</p>
-              <p><b>違い：</b>通常は即実装に走るが、superpowers有効時は <b>計画→ユーザー承認→テスト→実装→検証</b> の順を守る。</p>
-            </div>
-
-            <div class="howto-item">
-              <h3>🇯🇵 natural-japanese <span class="howto-cat">執筆</span></h3>
-              <p><b>何ができる：</b>AIっぽい機械的な日本語を、人間らしい自然な文体にリライト。note・ブログ・メール・Slack 投稿に。</p>
-              <p><b>使い方：</b>「<code>自然な日本語にして</code>」「<code>noteっぽくリライトして</code>」で起動。</p>
-              <p><b>精度を上げるコツ：</b><code>~/.claude/skills/natural-japanese/reference/</code> に過去のnote記事を <code>.md</code> で置く → 伊藤様のトーンを学習する。</p>
-              <p><b>例：</b>「下書きの note 記事を <code>natural-japanese</code> でリライトして。Before/Afterで出して」</p>
-            </div>
-
-          </div>
-        </details>
+        ${starredSection}
         ${sections}
         <div class="skills-footer">
           💡 更新方法：Claude Code で「<code>/skills-sync</code>」または「スキル一覧を更新して」と依頼
@@ -874,10 +857,20 @@ async function renderSkills(el) {
         .skill-table tr:last-child { border-bottom:none; }
         .skill-table tr:hover { background:#fafafa; }
         .skill-table td { padding:4px 10px; vertical-align:top; line-height:1.3; }
-        .skill-td-name { width:190px; white-space:nowrap; }
-        .skill-td-name code { background:#f3eaea; color:var(--primary); padding:2px 6px; border-radius:3px; font-size:12px; font-weight:bold; font-family:'SF Mono','Menlo','Consolas',monospace; }
-        .skill-tag { display:inline-block; background:#e8eef7; color:#2a5599; padding:1px 5px; border-radius:3px; font-size:10px; margin-left:4px; font-weight:bold; }
+        .skill-td-star { width:24px; padding:4px 0 4px 8px !important; text-align:center; }
+        .skill-star { background:none; border:none; cursor:pointer; font-size:16px; line-height:1; color:#cfcfcf; padding:0; font-family:inherit; transition:transform .1s, color .15s; }
+        .skill-star:hover { transform:scale(1.2); color:#e6a700; }
+        .skill-star.on { color:#ff4d4f; }
+        .skill-td-name { width:200px; white-space:nowrap; }
+        .skill-code { background:#e8eef7; color:#2a5599; padding:2px 7px; border-radius:3px; font-size:12px; font-weight:bold; font-family:'SF Mono','Menlo','Consolas',monospace; cursor:pointer; user-select:none; transition:background .15s; display:inline-block; }
+        .skill-code:hover { background:#d3deef; }
+        .skill-code.important { background:#ffe2e2; color:#c0292b; }
+        .skill-code.important:hover { background:#ffcccc; }
+        .skill-code.skill-copied { background:#1f9d55 !important; color:#fff !important; }
+        .skill-tag { display:inline-block; background:#f3eaea; color:var(--primary); padding:1px 5px; border-radius:3px; font-size:10px; margin-left:4px; font-weight:bold; }
         .skill-td-desc { font-size:12px; color:var(--gray1); }
+        /* 重要セクション */
+        .skill-cat-important .skill-cat-hdr { background:linear-gradient(180deg,#ff4d4f,#d9363e); }
         .skills-footer { margin-top:12px; padding:10px 14px; background:var(--white); border:1px solid var(--border); border-radius:6px; font-size:12px; color:var(--gray2); }
         .skills-footer code { background:#f3eaea; color:var(--primary); padding:2px 6px; border-radius:3px; font-family:'SF Mono','Menlo','Consolas',monospace; }
         /* 使い方パネル */
