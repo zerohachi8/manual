@@ -752,14 +752,11 @@ async function renderSkills(el) {
     // ナビゲーション
     const nav = data.categories.map((c,i)=>`<a href="#skcat-${i}" class="skill-nav-pill"><span>${c.icon||'•'}</span> ${esc(c.name)} <span class="skill-nav-count">${c.skills.length}</span></a>`).join('');
     const sections = data.categories.map((cat,i) => {
-      const cards = cat.skills.map(s => `
-        <div class="skill-card">
-          <div class="skill-card-name">
-            <code>${esc(s.name)}</code>
-            ${s.project?`<span class="skill-tag">${esc(s.project)}</span>`:''}
-          </div>
-          <div class="skill-card-desc">${esc(s.desc||'(説明なし)')}</div>
-        </div>`).join('');
+      const rows = cat.skills.map(s => `
+        <tr>
+          <td class="skill-td-name"><code>${esc(s.name)}</code>${s.project?`<span class="skill-tag">${esc(s.project)}</span>`:''}</td>
+          <td class="skill-td-desc">${esc(s.desc||'(説明なし)')}</td>
+        </tr>`).join('');
       return `
         <section class="skill-cat" id="skcat-${i}">
           <div class="skill-cat-hdr">
@@ -767,7 +764,7 @@ async function renderSkills(el) {
             <span class="skill-cat-title">${esc(cat.name)}</span>
             <span class="skill-count">${cat.skills.length} 件</span>
           </div>
-          <div class="skill-grid">${cards}</div>
+          <table class="skill-table">${rows}</table>
         </section>`;
     }).join('');
 
@@ -865,32 +862,37 @@ async function renderSkills(el) {
         .skill-nav-pill:hover { background:var(--primary); color:var(--white); border-color:var(--primary); }
         .skill-nav-count { background:#eee; color:var(--gray1); padding:1px 7px; border-radius:10px; font-size:11px; font-weight:bold; }
         .skill-nav-pill:hover .skill-nav-count { background:rgba(255,255,255,.25); color:#fff; }
-        .skill-cat { background:var(--white); border:1px solid var(--border); border-radius:8px; margin-bottom:18px; overflow:hidden; scroll-margin-top:10px; }
-        .skill-cat-hdr { display:flex; align-items:center; gap:10px; padding:14px 18px; background:linear-gradient(180deg,#fafafa,#f1f1f1); border-bottom:1px solid var(--border); }
-        .skill-cat-icon { font-size:20px; }
-        .skill-cat-title { flex:1; font-size:16px; font-weight:bold; color:var(--secondary); }
-        .skill-count { font-size:12px; color:var(--white); background:var(--primary); padding:3px 10px; border-radius:12px; font-weight:bold; }
-        .skill-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:1px; background:#eee; }
-        .skill-card { background:var(--white); padding:12px 16px; transition:background .1s; }
-        .skill-card:hover { background:#fafafa; }
-        .skill-card-name { margin-bottom:6px; line-height:1.4; }
-        .skill-card-name code { background:#f3eaea; color:var(--primary); padding:3px 8px; border-radius:4px; font-size:13px; font-weight:bold; font-family:'SF Mono','Menlo','Consolas',monospace; word-break:break-all; }
-        .skill-tag { display:inline-block; background:#e8eef7; color:#2a5599; padding:2px 7px; border-radius:3px; font-size:11px; margin-left:6px; font-weight:bold; }
-        .skill-card-desc { color:var(--gray1); line-height:1.65; font-size:13px; }
-        .skills-footer { margin-top:20px; padding:14px 18px; background:var(--white); border:1px solid var(--border); border-radius:6px; font-size:12px; color:var(--gray2); }
+        /* カテゴリブロック */
+        .skill-cat { background:var(--white); border:1px solid var(--border); border-radius:6px; margin-bottom:10px; overflow:hidden; scroll-margin-top:10px; }
+        .skill-cat-hdr { display:flex; align-items:center; gap:8px; padding:6px 12px; background:var(--secondary); }
+        .skill-cat-icon { font-size:15px; }
+        .skill-cat-title { flex:1; font-size:13px; font-weight:bold; color:#fff; }
+        .skill-count { font-size:11px; color:rgba(255,255,255,.75); font-weight:bold; }
+        /* コンパクト表 */
+        .skill-table { width:100%; border-collapse:collapse; }
+        .skill-table tr { border-bottom:1px solid #F0F0F0; }
+        .skill-table tr:last-child { border-bottom:none; }
+        .skill-table tr:hover { background:#fafafa; }
+        .skill-table td { padding:4px 10px; vertical-align:top; line-height:1.3; }
+        .skill-td-name { width:190px; white-space:nowrap; }
+        .skill-td-name code { background:#f3eaea; color:var(--primary); padding:2px 6px; border-radius:3px; font-size:12px; font-weight:bold; font-family:'SF Mono','Menlo','Consolas',monospace; }
+        .skill-tag { display:inline-block; background:#e8eef7; color:#2a5599; padding:1px 5px; border-radius:3px; font-size:10px; margin-left:4px; font-weight:bold; }
+        .skill-td-desc { font-size:12px; color:var(--gray1); }
+        .skills-footer { margin-top:12px; padding:10px 14px; background:var(--white); border:1px solid var(--border); border-radius:6px; font-size:12px; color:var(--gray2); }
         .skills-footer code { background:#f3eaea; color:var(--primary); padding:2px 6px; border-radius:3px; font-family:'SF Mono','Menlo','Consolas',monospace; }
-        .skill-howto { background:#fffbe6; border:1px solid #ffe58f; border-radius:8px; margin-bottom:20px; padding:0; }
-        .skill-howto > summary { padding:12px 18px; font-size:15px; font-weight:bold; color:#874d00; cursor:pointer; list-style:none; user-select:none; }
+        /* 使い方パネル */
+        .skill-howto { background:#fffbe6; border:1px solid #ffe58f; border-radius:6px; margin-bottom:12px; padding:0; }
+        .skill-howto > summary { padding:8px 14px; font-size:14px; font-weight:bold; color:#874d00; cursor:pointer; list-style:none; user-select:none; }
         .skill-howto > summary::-webkit-details-marker { display:none; }
-        .skill-howto > summary::before { content:'▶ '; font-size:11px; color:#b08200; }
+        .skill-howto > summary::before { content:'▶ '; font-size:10px; color:#b08200; }
         .skill-howto[open] > summary::before { content:'▼ '; }
-        .skill-howto-body { padding:4px 18px 18px; display:grid; grid-template-columns:repeat(auto-fill, minmax(420px,1fr)); gap:12px; }
-        .howto-item { background:#fff; border:1px solid #ffe58f; border-radius:6px; padding:12px 14px; }
-        .howto-item h3 { margin:0 0 8px; font-size:15px; color:var(--secondary); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+        .skill-howto-body { padding:4px 14px 14px; display:grid; grid-template-columns:repeat(auto-fill, minmax(420px,1fr)); gap:10px; }
+        .howto-item { background:#fff; border:1px solid #ffe58f; border-radius:5px; padding:10px 12px; }
+        .howto-item h3 { margin:0 0 6px; font-size:14px; color:var(--secondary); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
         .howto-cat { font-size:10px; background:var(--primary); color:#fff; padding:2px 8px; border-radius:10px; font-weight:bold; }
-        .howto-item p { margin:5px 0; font-size:12.5px; line-height:1.65; color:var(--gray1); }
-        .howto-item code { background:#f3eaea; color:var(--primary); padding:1px 6px; border-radius:3px; font-size:12px; font-family:'SF Mono','Menlo','Consolas',monospace; }
-        @media (max-width:600px) { .skill-grid, .skill-howto-body { grid-template-columns:1fr; } .skills-h2 { font-size:18px; } }
+        .howto-item p { margin:4px 0; font-size:12px; line-height:1.5; color:var(--gray1); }
+        .howto-item code { background:#f3eaea; color:var(--primary); padding:1px 5px; border-radius:3px; font-size:11px; font-family:'SF Mono','Menlo','Consolas',monospace; }
+        @media (max-width:600px) { .skill-td-name { width:130px; } .skill-howto-body { grid-template-columns:1fr; } .skills-h2 { font-size:16px; } }
       </style>`;
   } catch(e) {
     el.innerHTML = '<div style="padding:24px;color:#c33">読み込みエラー: ' + esc(e.message) + '</div>';
