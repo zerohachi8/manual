@@ -6,19 +6,71 @@
       "icon": "💻",
       "desc": "コードの設計・実装・レビュー・デバッグ・テスト時に使う",
       "skills": [
-        {"name":"architecture","desc":"ADR（アーキテクチャ決定記録）の作成・評価。技術選定（例：Kafka vs SQS）、設計レビュー、トレードオフ整理","category":"code"},
-        {"name":"claude-api","desc":"Claude API / Anthropic SDK アプリの開発・デバッグ・最適化支援","category":"code"},
-        {"name":"code-review","desc":"現在の差分をレビュー（low〜ultra で深度調整、--fix で自動修正）","category":"code"},
-        {"name":"code-review","desc":"コード変更レビュー（セキュリティ・パフォーマンス・正しさ・N+1・インジェクション・エッジケース）","category":"code"},
-        {"name":"debug","desc":"構造化デバッグ（再現→切り分け→診断→修正）。エラーログ、本番/staging差分の調査","category":"code"},
-        {"name":"init","desc":"プロジェクト用 CLAUDE.md を自動生成","category":"code"},
-        {"name":"playwright","desc":"自然言語でブラウザ操作（クリック・入力・スクショ・PDF化）。ログイン要サイトの情報収集・定期投稿・E2Eテストを自動化","category":"code"},
-        {"name":"review","desc":"GitHub Pull Request のレビュー","category":"code"},
-        {"name":"run","desc":"プロジェクトのアプリを起動して動作確認","category":"code"},
-        {"name":"security-review","desc":"現ブランチの未マージ変更にセキュリティ監査を実施","category":"code"},
-        {"name":"simplify","desc":"コードの簡素化・再利用・効率化を実施（バグ探索は行わない）","category":"code"},
-        {"name":"testing-strategy","desc":"テスト戦略・テスト計画の設計。カバレッジ・テストピラミッド・テスト構成","category":"code"},
-        {"name":"verify","desc":"コード変更が要件通り動くかアプリ起動で検証","category":"code"}
+        {
+          "name": "/architecture",
+          "desc": "ADR（アーキテクチャ決定記録）の作成・評価。技術選定（例：Kafka vs SQS）、設計レビュー、トレードオフ整理",
+          "category": "code"
+        },
+        {
+          "name": "/claude-api",
+          "desc": "Claude API / Anthropic SDK アプリの開発・デバッグ・最適化支援",
+          "category": "code"
+        },
+        {
+          "name": "/code-review",
+          "desc": "現在の差分をレビュー（low〜ultra で深度調整、--fix で自動修正）",
+          "category": "code"
+        },
+        {
+          "name": "/code-review",
+          "desc": "コード変更レビュー（セキュリティ・パフォーマンス・正しさ・N+1・インジェクション・エッジケース）",
+          "category": "code"
+        },
+        {
+          "name": "/debug",
+          "desc": "構造化デバッグ（再現→切り分け→診断→修正）。エラーログ、本番/staging差分の調査",
+          "category": "code"
+        },
+        {
+          "name": "/init",
+          "desc": "プロジェクト用 CLAUDE.md を自動生成",
+          "category": "code"
+        },
+        {
+          "name": "/playwright",
+          "desc": "自然言語でブラウザ操作（クリック・入力・スクショ・PDF化）。ログイン要サイトの情報収集・定期投稿・E2Eテストを自動化",
+          "category": "code"
+        },
+        {
+          "name": "/review",
+          "desc": "GitHub Pull Request のレビュー",
+          "category": "code"
+        },
+        {
+          "name": "/run",
+          "desc": "プロジェクトのアプリを起動して動作確認",
+          "category": "code"
+        },
+        {
+          "name": "/security-review",
+          "desc": "現ブランチの未マージ変更にセキュリティ監査を実施",
+          "category": "code"
+        },
+        {
+          "name": "/simplify",
+          "desc": "コードの簡素化・再利用・効率化を実施（バグ探索は行わない）",
+          "category": "code"
+        },
+        {
+          "name": "/testing-strategy",
+          "desc": "テスト戦略・テスト計画の設計。カバレッジ・テストピラミッド・テスト構成",
+          "category": "code"
+        },
+        {
+          "name": "/verify",
+          "desc": "コード変更が要件通り動くかアプリ起動で検証",
+          "category": "code"
+        }
       ]
     },
     {
@@ -26,19 +78,72 @@
       "icon": "🎨",
       "desc": "デザイン批評・デザインシステム・アクセシビリティ・UXコピー・イラスト",
       "skills": [
-        {"name":"accessibility-review","desc":"WCAG 2.1 AA 基準でアクセシビリティ監査（色コントラスト・キーボード操作・タッチ領域・スクリーンリーダー対応）","category":"design"},
-        {"name":"brand-guidelines","desc":"指定したブランドカラーやタイポグラフィを生成物（スライド・LP・画像）に反映させる","category":"design"},
-        {"name":"canvas-design","desc":"デザイン哲学に基づいた高品質ビジュアルアート（PNG・PDF）を作成","category":"design"},
-        {"name":"design-critique","desc":"デザインに構造化フィードバック（使いやすさ・情報階層・一貫性）。Figma URLやスクショ対応","category":"design"},
-        {"name":"design-handoff","desc":"デザイン→エンジニア向け仕様書を生成（レイアウト・デザイントークン・状態・アニメーション・レスポンシブ）","category":"design"},
-        {"name":"design-system","desc":"デザインシステムの監査・ドキュメント化・拡張。命名一貫性、ハードコード値検出、新パターン設計","category":"design"},
-        {"name":"drawkit-fetch","desc":"DrawKit の無料イラストパックをローカルキャッシュから検索して埋め込む半自動スキル。`/drawkit-fetch` で呼び出す。初回のみ手動DL、2回目以降はキャッシュ自動取得","category":"design"},
-        {"name":"frontend-design:frontend-design","desc":"洗練されたUIのHTML/CSS/JSを自動生成。「AIで作った感」を排除したモダンなLP・コーポレートサイト構築。UI作業中に自動起動","category":"design"},
-        {"name":"icon-find","desc":"アイコンをキーワード検索して返す。①自前ライブラリ948点（フルカラーPNG）②Google Material Symbols Rounded 4258点（単色Webフォント・FILL1/wght400/GRAD200/opsz20）。日英シノニム表でヒット率向上。「アイコン探して」「Material Symbols」「icon-find」で起動","category":"design"},
-        {"name":"pixabay-fetch","desc":"Pixabay API から記事サムネ・バナー用の写真を取得。3候補生成→Read確認→採点表→採用の半自動フロー。API key は aismobiz/.env を流用（保管済）。Pixabay License（商用OK・帰属表示不要）。「サムネ画像が欲しい」「背景写真」で起動","category":"design"},
-        {"name":"svgrepo-fetch","desc":"SVGRepo から50万点超のSVGを取得して埋め込む。スライド・HTML・バナー・サムネ作成時に。CC0/MIT中心（商用OK）。unDrawに無い素材の代替として使う","category":"design"},
-        {"name":"undraw-fetch","desc":"unDraw API から SVG イラストを自動取得（MIT・商用OK・帰属表示不要）。スライド/HTML/画像作成時に自動適用","category":"design"},
-        {"name":"ux-copy","desc":"UXコピーの作成・レビュー。ボタン文言・エラーメッセージ・空状態・CTA・オンボ文言","category":"design"}
+        {
+          "name": "/accessibility-review",
+          "desc": "WCAG 2.1 AA 基準でアクセシビリティ監査（色コントラスト・キーボード操作・タッチ領域・スクリーンリーダー対応）",
+          "category": "design"
+        },
+        {
+          "name": "/brand-guidelines",
+          "desc": "指定したブランドカラーやタイポグラフィを生成物（スライド・LP・画像）に反映させる",
+          "category": "design"
+        },
+        {
+          "name": "/canvas-design",
+          "desc": "デザイン哲学に基づいた高品質ビジュアルアート（PNG・PDF）を作成",
+          "category": "design"
+        },
+        {
+          "name": "/design-critique",
+          "desc": "デザインに構造化フィードバック（使いやすさ・情報階層・一貫性）。Figma URLやスクショ対応",
+          "category": "design"
+        },
+        {
+          "name": "/design-handoff",
+          "desc": "デザイン→エンジニア向け仕様書を生成（レイアウト・デザイントークン・状態・アニメーション・レスポンシブ）",
+          "category": "design"
+        },
+        {
+          "name": "/design-system",
+          "desc": "デザインシステムの監査・ドキュメント化・拡張。命名一貫性、ハードコード値検出、新パターン設計",
+          "category": "design"
+        },
+        {
+          "name": "/drawkit-fetch",
+          "desc": "DrawKit の無料イラストパックをローカルキャッシュから検索して埋め込む半自動スキル。`/drawkit-fetch` で呼び出す。初回のみ手動DL、2回目以降はキャッシュ自動取得",
+          "category": "design"
+        },
+        {
+          "name": "/frontend-design",
+          "desc": "洗練されたUIのHTML/CSS/JSを自動生成。「AIで作った感」を排除したモダンなLP・コーポレートサイト構築。UI作業中に自動起動",
+          "category": "design",
+          "project": "frontend-design"
+        },
+        {
+          "name": "/icon-find",
+          "desc": "アイコンをキーワード検索して返す。①自前ライブラリ948点（フルカラーPNG）②Google Material Symbols Rounded 4258点（単色Webフォント・FILL1/wght400/GRAD200/opsz20）。日英シノニム表でヒット率向上。「アイコン探して」「Material Symbols」「icon-find」で起動",
+          "category": "design"
+        },
+        {
+          "name": "/pixabay-fetch",
+          "desc": "Pixabay API から記事サムネ・バナー用の写真を取得。3候補生成→Read確認→採点表→採用の半自動フロー。API key は aismobiz/.env を流用（保管済）。Pixabay License（商用OK・帰属表示不要）。「サムネ画像が欲しい」「背景写真」で起動",
+          "category": "design"
+        },
+        {
+          "name": "/svgrepo-fetch",
+          "desc": "SVGRepo から50万点超のSVGを取得して埋め込む。スライド・HTML・バナー・サムネ作成時に。CC0/MIT中心（商用OK）。unDrawに無い素材の代替として使う",
+          "category": "design"
+        },
+        {
+          "name": "/undraw-fetch",
+          "desc": "unDraw API から SVG イラストを自動取得（MIT・商用OK・帰属表示不要）。スライド/HTML/画像作成時に自動適用",
+          "category": "design"
+        },
+        {
+          "name": "/ux-copy",
+          "desc": "UXコピーの作成・レビュー。ボタン文言・エラーメッセージ・空状態・CTA・オンボ文言",
+          "category": "design"
+        }
       ]
     },
     {
@@ -46,15 +151,55 @@
       "icon": "📝",
       "desc": "Word/PDF/PowerPoint/Excel の作成・編集、技術文書、PDF/動画の取り込み",
       "skills": [
-        {"name":"anthropic-skills:docx","desc":"Word 文書（.docx）の作成・編集・読み取り","category":"docs"},
-        {"name":"anthropic-skills:pdf","desc":"PDF 操作（結合・分割・OCR・フォーム入力・暗号化）","category":"docs"},
-        {"name":"anthropic-skills:pptx","desc":"PowerPoint スライドの作成・編集・テキスト抽出","category":"docs"},
-        {"name":"anthropic-skills:xlsx","desc":"Excel・CSV ファイルの作成・編集・整形","category":"docs"},
-        {"name":"documentation","desc":"技術文書の執筆（README・APIドキュメント・アーキテクチャ文書・運用Runbook・オンボーディング）","category":"docs"},
-        {"name":"natural-japanese","desc":"AIっぽい機械的な日本語を、人間らしい自然な文章にリライト。note記事・ブログ・SNS・メール本文に。reference/に過去記事を置くとトーン再現","category":"docs"},
-        {"name":"pdf-import","desc":"PDF・スライド・画像を Google ドライブ「他社資料・セミナー」フォルダへ整理保存。YYMMDD_ 命名で要約付き","category":"docs"},
-        {"name":"progress-report","desc":"「進捗報告」「社長報告」「/progress-report」で起動。Git履歴・TASKS.md・GitHub Issueから完了/未完了を自動抽出し、社長報告用プレーンテキストを生成。初見でも理解できる体言止め・【】■・区切り・「／」まとめで出力。出力前に3観点でダブルチェック","category":"docs"},
-        {"name":"youtube-import","desc":"YouTube動画URLを検出すると自動起動し、文字起こし＋要約＋Wordドキュメント保存＋Driveへの保存まで完結。URL貼付け、「文字起こし」「要約」「議事録化」「ドライブに入れて」でも起動","category":"docs"}
+        {
+          "name": "/docx",
+          "desc": "Word 文書（.docx）の作成・編集・読み取り",
+          "category": "docs",
+          "project": "anthropic-skills"
+        },
+        {
+          "name": "/pdf",
+          "desc": "PDF 操作（結合・分割・OCR・フォーム入力・暗号化）",
+          "category": "docs",
+          "project": "anthropic-skills"
+        },
+        {
+          "name": "/pptx",
+          "desc": "PowerPoint スライドの作成・編集・テキスト抽出",
+          "category": "docs",
+          "project": "anthropic-skills"
+        },
+        {
+          "name": "/xlsx",
+          "desc": "Excel・CSV ファイルの作成・編集・整形",
+          "category": "docs",
+          "project": "anthropic-skills"
+        },
+        {
+          "name": "/documentation",
+          "desc": "技術文書の執筆（README・APIドキュメント・アーキテクチャ文書・運用Runbook・オンボーディング）",
+          "category": "docs"
+        },
+        {
+          "name": "/natural-japanese",
+          "desc": "AIっぽい機械的な日本語を、人間らしい自然な文章にリライト。note記事・ブログ・SNS・メール本文に。reference/に過去記事を置くとトーン再現",
+          "category": "docs"
+        },
+        {
+          "name": "/pdf-import",
+          "desc": "PDF・スライド・画像を Google ドライブ「他社資料・セミナー」フォルダへ整理保存。YYMMDD_ 命名で要約付き",
+          "category": "docs"
+        },
+        {
+          "name": "/progress-report",
+          "desc": "「進捗報告」「社長報告」「/progress-report」で起動。Git履歴・TASKS.md・GitHub Issueから完了/未完了を自動抽出し、社長報告用プレーンテキストを生成。初見でも理解できる体言止め・【】■・区切り・「／」まとめで出力。出力前に3観点でダブルチェック",
+          "category": "docs"
+        },
+        {
+          "name": "/youtube-import",
+          "desc": "YouTube動画URLを検出すると自動起動し、文字起こし＋要約＋Wordドキュメント保存＋Driveへの保存まで完結。URL貼付け、「文字起こし」「要約」「議事録化」「ドライブに入れて」でも起動",
+          "category": "docs"
+        }
       ]
     },
     {
@@ -62,10 +207,26 @@
       "icon": "🔍",
       "desc": "Web 深掘り調査、ユーザー調査、競合分析、リサーチ統合",
       "skills": [
-        {"name":"competitive-brief","desc":"競合分析ブリーフ作成。プロダクト戦略・セールスバトルカード・差別化判断","category":"research"},
-        {"name":"deep-research","desc":"多ソース Web 調査＋裏取り検証＋出典付きレポート生成","category":"research"},
-        {"name":"research-synthesis","desc":"ユーザー調査の統合（インタビュー・サーベイ・サポート問い合わせ→テーマ抽出・推奨アクション）","category":"research"},
-        {"name":"user-research","desc":"ユーザー調査の企画〜実施〜統合。リサーチ計画・インタビューガイド・ユーザビリティテスト・サーベイ設計","category":"research"}
+        {
+          "name": "/competitive-brief",
+          "desc": "競合分析ブリーフ作成。プロダクト戦略・セールスバトルカード・差別化判断",
+          "category": "research"
+        },
+        {
+          "name": "/deep-research",
+          "desc": "多ソース Web 調査＋裏取り検証＋出典付きレポート生成",
+          "category": "research"
+        },
+        {
+          "name": "/research-synthesis",
+          "desc": "ユーザー調査の統合（インタビュー・サーベイ・サポート問い合わせ→テーマ抽出・推奨アクション）",
+          "category": "research"
+        },
+        {
+          "name": "/user-research",
+          "desc": "ユーザー調査の企画〜実施〜統合。リサーチ計画・インタビューガイド・ユーザビリティテスト・サーベイ設計",
+          "category": "research"
+        }
       ]
     },
     {
@@ -73,9 +234,21 @@
       "icon": "📊",
       "desc": "アイデアブレスト、仕様書／PRD、ロードマップ整理",
       "skills": [
-        {"name":"product-brainstorming","desc":"プロダクトアイデアのブレスト・問題空間の探索・仮説の壁打ち。PMの思考整理パートナー","category":"product"},
-        {"name":"roadmap-update","desc":"プロダクトロードマップの更新・新規作成・優先順位調整。Now/Next/Later 整理","category":"product"},
-        {"name":"write-spec","desc":"アイデア→機能仕様書/PRD化。ゴール・非ゴール、成功指標、受入条件、段階分割","category":"product"}
+        {
+          "name": "/product-brainstorming",
+          "desc": "プロダクトアイデアのブレスト・問題空間の探索・仮説の壁打ち。PMの思考整理パートナー",
+          "category": "product"
+        },
+        {
+          "name": "/roadmap-update",
+          "desc": "プロダクトロードマップの更新・新規作成・優先順位調整。Now/Next/Later 整理",
+          "category": "product"
+        },
+        {
+          "name": "/write-spec",
+          "desc": "アイデア→機能仕様書/PRD化。ゴール・非ゴール、成功指標、受入条件、段階分割",
+          "category": "product"
+        }
       ]
     },
     {
@@ -83,7 +256,11 @@
       "icon": "📋",
       "desc": "Google Tasks など TODO 管理",
       "skills": [
-        {"name":"google-tasks","desc":"Google Tasks（tasks.google.com）への追加・一覧・更新・完了・削除。デフォルトリスト「マイタスク」","category":"task"}
+        {
+          "name": "/google-tasks",
+          "desc": "Google Tasks（tasks.google.com）への追加・一覧・更新・完了・削除。デフォルトリスト「マイタスク」",
+          "category": "task"
+        }
       ]
     },
     {
@@ -91,32 +268,156 @@
       "icon": "⚙️",
       "desc": "設定ファイル・キーバインド・定期実行・スキル管理など Claude Code 自体の運用",
       "skills": [
-        {"name":"anthropic-skills:consolidate-memory","desc":"メモリファイル整理（重複統合・古い情報除去）","category":"config"},
-        {"name":"anthropic-skills:setup-cowork","desc":"Cowork プラグインの初期セットアップガイド","category":"config"},
-        {"name":"anthropic-skills:skill-creator","desc":"スキルの新規作成・既存スキル改善・性能測定","category":"config"},
-        {"name":"approval-workflow","desc":"🛑 メッセージに「要件定義」「要求定義」「提案して」が含まれていたら起動。見出し・箇条書き・テーブルで視認性高く「要件定義→調査→複数案提案→承認待ち→ソース明記」の5ステップを踏む","category":"config"},
-        {"name":"claude-code-setup:claude-automation-recommender","desc":"プロジェクトを診断してClaude Code活用法（Hooks/Subagents/Skills/MCP）を提案","category":"config"},
-        {"name":"claude-md-management:claude-md-improver","desc":"CLAUDE.mdファイルを監査・整理。品質スコア化・不足項目の提案","category":"config"},
-        {"name":"claude-md-management:revise-claude-md","desc":"セッションの学びを CLAUDE.md に自動追記","category":"config"},
-        {"name":"fewer-permission-prompts","desc":"安全な頻出コマンドを自動許可化して許可ダイアログを削減","category":"config"},
-        {"name":"keybindings-help","desc":"キーボードショートカットのカスタマイズ","category":"config"},
-        {"name":"loop","desc":"プロンプトやスラッシュコマンドを指定間隔で定期実行","category":"config"},
-        {"name":"schedule","desc":"cron スケジュールでリモートエージェント（routine）を実行","category":"config"},
-        {"name":"superpowers:brainstorming","desc":"【コアワークフロー】実装前に要件を深掘りし、設計オプションを検討して合意を形成","category":"config"},
-        {"name":"superpowers:dispatching-parallel-agents","desc":"【実装支援】依存関係のないタスクを並列実行","category":"config"},
-        {"name":"superpowers:executing-plans","desc":"【コアワークフロー】作成した計画を段階的に実行し、チェックポイントで確認","category":"config"},
-        {"name":"superpowers:finishing-a-development-branch","desc":"【Git運用】実装完了後のマージ/PR作成/クリーンアップをガイド","category":"config"},
-        {"name":"superpowers:receiving-code-review","desc":"【レビュー】レビューコメントの理解と適切な反映をガイド","category":"config"},
-        {"name":"superpowers:requesting-code-review","desc":"【レビュー】レビュー依頼の出し方と確認観点を整理","category":"config"},
-        {"name":"superpowers:subagent-driven-development","desc":"【実装支援】タスクごとに独立したサブエージェントを割り当て、2段階レビューを実施","category":"config"},
-        {"name":"superpowers:systematic-debugging","desc":"【品質保証】4フェーズの根本原因分析。当てずっぽう修正を禁止","category":"config"},
-        {"name":"superpowers:test-driven-development","desc":"【実装支援】RED-GREEN-REFACTORサイクルの強制。すべての実装はテストから始める","category":"config"},
-        {"name":"superpowers:using-git-worktrees","desc":"【Git運用】Git Worktreeを使って作業空間を分離し、安全に開発","category":"config"},
-        {"name":"superpowers:using-superpowers","desc":"【メタ】Superpowersの基本的な使い方と、スキル適用の判断基準","category":"config"},
-        {"name":"superpowers:verification-before-completion","desc":"【品質保証】完了宣言前の検証を必須化。証拠なき成功主張を禁止","category":"config"},
-        {"name":"superpowers:writing-plans","desc":"【コアワークフロー】合意した設計から、2〜5分で完了できるタスク粒度の実装計画を作成","category":"config"},
-        {"name":"superpowers:writing-skills","desc":"【メタ】新しいスキルの作成方法と、SKILL.mdの書き方","category":"config"},
-        {"name":"update-config","desc":"Claude Code の settings.json を設定（Hooks・パーミッション・環境変数）","category":"config"}
+        {
+          "name": "/consolidate-memory",
+          "desc": "メモリファイル整理（重複統合・古い情報除去）",
+          "category": "config",
+          "project": "anthropic-skills"
+        },
+        {
+          "name": "/setup-cowork",
+          "desc": "Cowork プラグインの初期セットアップガイド",
+          "category": "config",
+          "project": "anthropic-skills"
+        },
+        {
+          "name": "/skill-creator",
+          "desc": "スキルの新規作成・既存スキル改善・性能測定",
+          "category": "config",
+          "project": "anthropic-skills"
+        },
+        {
+          "name": "/approval-workflow",
+          "desc": "🛑 メッセージに「要件定義」「要求定義」「提案して」が含まれていたら起動。見出し・箇条書き・テーブルで視認性高く「要件定義→調査→複数案提案→承認待ち→ソース明記」の5ステップを踏む",
+          "category": "config"
+        },
+        {
+          "name": "/claude-automation-recommender",
+          "desc": "プロジェクトを診断してClaude Code活用法（Hooks/Subagents/Skills/MCP）を提案",
+          "category": "config",
+          "project": "claude-code-setup"
+        },
+        {
+          "name": "/claude-md-improver",
+          "desc": "CLAUDE.mdファイルを監査・整理。品質スコア化・不足項目の提案",
+          "category": "config",
+          "project": "claude-md-management"
+        },
+        {
+          "name": "/revise-claude-md",
+          "desc": "セッションの学びを CLAUDE.md に自動追記",
+          "category": "config",
+          "project": "claude-md-management"
+        },
+        {
+          "name": "/fewer-permission-prompts",
+          "desc": "安全な頻出コマンドを自動許可化して許可ダイアログを削減",
+          "category": "config"
+        },
+        {
+          "name": "/keybindings-help",
+          "desc": "キーボードショートカットのカスタマイズ",
+          "category": "config"
+        },
+        {
+          "name": "/loop",
+          "desc": "プロンプトやスラッシュコマンドを指定間隔で定期実行",
+          "category": "config"
+        },
+        {
+          "name": "/schedule",
+          "desc": "cron スケジュールでリモートエージェント（routine）を実行",
+          "category": "config"
+        },
+        {
+          "name": "/brainstorming",
+          "desc": "【コアワークフロー】実装前に要件を深掘りし、設計オプションを検討して合意を形成",
+          "category": "config",
+          "project": "superpowers"
+        },
+        {
+          "name": "/dispatching-parallel-agents",
+          "desc": "【実装支援】依存関係のないタスクを並列実行",
+          "category": "config",
+          "project": "superpowers"
+        },
+        {
+          "name": "/executing-plans",
+          "desc": "【コアワークフロー】作成した計画を段階的に実行し、チェックポイントで確認",
+          "category": "config",
+          "project": "superpowers"
+        },
+        {
+          "name": "/finishing-a-development-branch",
+          "desc": "【Git運用】実装完了後のマージ/PR作成/クリーンアップをガイド",
+          "category": "config",
+          "project": "superpowers"
+        },
+        {
+          "name": "/receiving-code-review",
+          "desc": "【レビュー】レビューコメントの理解と適切な反映をガイド",
+          "category": "config",
+          "project": "superpowers"
+        },
+        {
+          "name": "/requesting-code-review",
+          "desc": "【レビュー】レビュー依頼の出し方と確認観点を整理",
+          "category": "config",
+          "project": "superpowers"
+        },
+        {
+          "name": "/subagent-driven-development",
+          "desc": "【実装支援】タスクごとに独立したサブエージェントを割り当て、2段階レビューを実施",
+          "category": "config",
+          "project": "superpowers"
+        },
+        {
+          "name": "/systematic-debugging",
+          "desc": "【品質保証】4フェーズの根本原因分析。当てずっぽう修正を禁止",
+          "category": "config",
+          "project": "superpowers"
+        },
+        {
+          "name": "/test-driven-development",
+          "desc": "【実装支援】RED-GREEN-REFACTORサイクルの強制。すべての実装はテストから始める",
+          "category": "config",
+          "project": "superpowers"
+        },
+        {
+          "name": "/using-git-worktrees",
+          "desc": "【Git運用】Git Worktreeを使って作業空間を分離し、安全に開発",
+          "category": "config",
+          "project": "superpowers"
+        },
+        {
+          "name": "/using-superpowers",
+          "desc": "【メタ】Superpowersの基本的な使い方と、スキル適用の判断基準",
+          "category": "config",
+          "project": "superpowers"
+        },
+        {
+          "name": "/verification-before-completion",
+          "desc": "【品質保証】完了宣言前の検証を必須化。証拠なき成功主張を禁止",
+          "category": "config",
+          "project": "superpowers"
+        },
+        {
+          "name": "/writing-plans",
+          "desc": "【コアワークフロー】合意した設計から、2〜5分で完了できるタスク粒度の実装計画を作成",
+          "category": "config",
+          "project": "superpowers"
+        },
+        {
+          "name": "/writing-skills",
+          "desc": "【メタ】新しいスキルの作成方法と、SKILL.mdの書き方",
+          "category": "config",
+          "project": "superpowers"
+        },
+        {
+          "name": "/update-config",
+          "desc": "Claude Code の settings.json を設定（Hooks・パーミッション・環境変数）",
+          "category": "config"
+        }
       ]
     },
     {
@@ -124,14 +425,46 @@
       "icon": "📁",
       "desc": "各プロジェクトの .claude/commands/ にある独自スラッシュコマンド",
       "skills": [
-        {"name":"daily-log","desc":"本日の作業ログ＋プロジェクト別タスク一覧を表示。必ず末尾に「ご利用メニュー＋タスク一覧」パネルを表示する。","project":"zerohachi"},
-        {"name":"design-critique","desc":"Designerロールで UI/レイアウトを批評する（参考URL・スクショ持ち込み歓迎）","project":"readnavi"},
-        {"name":"frontjour-summary","desc":"Slack #frontjour に共有された参考記事URLを定型フォーマットで要約し、ドライブのログファイルに追記＋Slackスレッドへ返信する。","project":"frontjournal"},
-        {"name":"git-tasks","desc":"現在のリポジトリの GitHub Issue を一覧表示する（初心者向けGUI形式・Task list進捗バー付き）。「タスク教えて」でも起動。","project":"frontjournal"},
-        {"name":"git-tasks","desc":"現在のリポジトリの GitHub Issue を一覧表示する（初心者向けGUI形式・Task list進捗バー付き）。「タスク教えて」でも起動。","project":"zerohachi"},
-        {"name":"plan","desc":"機能追加・改修の設計ドラフトを出す（Engineering Manager + CEOロール）","project":"readnavi"},
-        {"name":"review","desc":"WEBサイトのカード・余白・タイポを横断審査する（QA/Designerロール）","project":"readnavi"},
-        {"name":"update-spec","desc":"仕様書（docs/SPEC.md）を最新の変更内容に同期し、Git にコミット＆プッシュ。Google ドライブにもコピー保存する。","project":"frontjournal"}
+        {
+          "name": "/daily-log",
+          "desc": "本日の作業ログ＋プロジェクト別タスク一覧を表示。必ず末尾に「ご利用メニュー＋タスク一覧」パネルを表示する。",
+          "project": "zerohachi"
+        },
+        {
+          "name": "/design-critique",
+          "desc": "Designerロールで UI/レイアウトを批評する（参考URL・スクショ持ち込み歓迎）",
+          "project": "readnavi"
+        },
+        {
+          "name": "/frontjour-summary",
+          "desc": "Slack #frontjour に共有された参考記事URLを定型フォーマットで要約し、ドライブのログファイルに追記＋Slackスレッドへ返信する。",
+          "project": "frontjournal"
+        },
+        {
+          "name": "/git-tasks",
+          "desc": "現在のリポジトリの GitHub Issue を一覧表示する（初心者向けGUI形式・Task list進捗バー付き）。「タスク教えて」でも起動。",
+          "project": "frontjournal"
+        },
+        {
+          "name": "/git-tasks",
+          "desc": "現在のリポジトリの GitHub Issue を一覧表示する（初心者向けGUI形式・Task list進捗バー付き）。「タスク教えて」でも起動。",
+          "project": "zerohachi"
+        },
+        {
+          "name": "/plan",
+          "desc": "機能追加・改修の設計ドラフトを出す（Engineering Manager + CEOロール）",
+          "project": "readnavi"
+        },
+        {
+          "name": "/review",
+          "desc": "WEBサイトのカード・余白・タイポを横断審査する（QA/Designerロール）",
+          "project": "readnavi"
+        },
+        {
+          "name": "/update-spec",
+          "desc": "仕様書（docs/SPEC.md）を最新の変更内容に同期し、Git にコミット＆プッシュ。Google ドライブにもコピー保存する。",
+          "project": "frontjournal"
+        }
       ]
     }
   ]
