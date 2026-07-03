@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>トラブルシューティング｜ゼロハチ株式会社マニュアル</title>
+<style>
+:root {
+  --bg:       #F4F4F4;
+  --primary:  #7B1A1A;
+  --primary2: #9B2A2A;
+  --secondary:#2A2A2A;
+  --gray1:    #444444;
+  --gray2:    #666666;
+  --gray3:    #999999;
+  --white:    #FFFFFF;
+  --text:     #1A1A1A;
+  --muted:    #777777;
+  --border:   #C8C8C8;
+  --hover:    #EBEBEB;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Yu Gothic UI','Meiryo UI','Hiragino Kaku Gothic ProN','Meiryo',sans-serif;
+  background: var(--bg); color: var(--text); font-size: 14px;
+  min-height: 100vh; padding: 20px;
+}
+.container { max-width: 900px; margin: 0 auto; }
+header {
+  background: var(--white); border-top: 4px solid var(--primary);
+  padding: 20px 28px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  margin-bottom: 16px;
+}
+header h1 { font-size: 20px; color: var(--primary); margin-bottom: 4px; }
+header .sub { font-size: 13px; color: var(--muted); }
+header a { color: var(--primary); text-decoration: none; }
+header a:hover { text-decoration: underline; }
+
+.card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 6px; padding: 20px 24px; margin-bottom: 14px;
+}
+.card h2 {
+  font-size: 16px; color: var(--primary); border-left: 4px solid var(--primary);
+  padding-left: 10px; margin-bottom: 12px;
+}
+.card h3 {
+  font-size: 14px; color: var(--secondary); margin: 14px 0 8px 0;
+}
+.card p { line-height: 1.7; margin-bottom: 8px; }
+.card ul, .card ol { padding-left: 22px; margin-bottom: 8px; }
+.card li { line-height: 1.8; }
+
+table {
+  width: 100%; border-collapse: collapse; margin: 8px 0 4px 0;
+  background: var(--white); font-size: 13px;
+}
+th, td {
+  border: 1px solid var(--border); padding: 8px 10px; text-align: left;
+  vertical-align: top;
+}
+th { background: var(--hover); font-weight: bold; color: var(--secondary); }
+td strong { color: var(--primary); }
+
+code, pre {
+  font-family: 'SF Mono','Menlo','Consolas',monospace;
+  background: #f3eaea; color: var(--primary);
+  border-radius: 3px;
+}
+code { padding: 2px 6px; font-size: 12px; }
+pre {
+  padding: 12px 14px; margin: 8px 0; overflow-x: auto;
+  border: 1px solid var(--border); color: var(--text); background: #2A2A2A;
+}
+pre code { background: transparent; color: #f0e0e0; padding: 0; font-size: 13px; }
+
+.tag {
+  display: inline-block; padding: 2px 8px; border-radius: 3px;
+  font-size: 11px; font-weight: bold; margin-right: 6px;
+}
+.tag-step { background: var(--primary); color: var(--white); }
+.tag-note { background: #FFF3CD; color: #856404; border: 1px solid #FFE69C; }
+
+.callout {
+  background: #FFF8E7; border-left: 4px solid #E8A700;
+  padding: 10px 14px; margin: 10px 0; border-radius: 3px; font-size: 13px;
+}
+footer {
+  text-align: center; color: var(--muted); font-size: 12px;
+  padding: 20px 0 10px 0;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>🔧 トラブルシューティング</h1>
+  <div class="sub"><a href="index.html">← マニュアルTOPへ戻る</a></div>
+</header>
+
+<!-- ============ CANVA MCP ============ -->
+<div class="card">
+  <h2>Canva MCP に接続できない</h2>
+  <p>Claude Code から Canva ツール（<code>copy-design</code> / <code>export-design</code> 等）が使えないときの復旧手順。</p>
+
+  <h3>📋 症状→対処 早見表</h3>
+  <table>
+    <thead>
+      <tr><th style="width:38%">症状</th><th style="width:32%">原因</th><th>対処</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>セッション中に Canva ツールが急に消えた／使えなくなった</td>
+        <td>セッション中の MCP 切断（ツール一覧は会話開始時に固定）</td>
+        <td><strong>新しいセッションを開くだけで復活</strong></td>
+      </tr>
+      <tr>
+        <td><code>claude mcp list</code> に canva が無い</td>
+        <td>MCP 未登録</td>
+        <td>下の <strong>STEP A</strong> で登録</td>
+      </tr>
+      <tr>
+        <td><code>! Needs authentication</code> と表示</td>
+        <td>認証未完了</td>
+        <td>下の <strong>STEP B</strong> で認証</td>
+      </tr>
+      <tr>
+        <td>claude.ai コネクタで「切断する」ボタンが見える</td>
+        <td>接続済み（正常）</td>
+        <td>新セッションを開けば使える</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3><span class="tag tag-step">STEP A</span>Canva MCP を登録する</h3>
+  <p>ターミナルで以下を実行：</p>
+  <pre><code>claude mcp add --transport http canva https://mcp.canva.com/mcp</code></pre>
+  <p>登録確認：</p>
+  <pre><code>claude mcp list</code></pre>
+  <p><code>canva: https://mcp.canva.com/mcp (HTTP)</code> が表示されれば登録OK。</p>
+
+  <h3><span class="tag tag-step">STEP B</span>認証（OAuth）する</h3>
+  <ol>
+    <li>ターミナルで <code>claude</code> を起動（インタラクティブモード）</li>
+    <li>チャット内で <code>/mcp</code> を入力</li>
+    <li>Canva の認証URLが表示されるので<strong>ブラウザで開く</strong></li>
+    <li>Canva アカウントでログイン →「許可する」</li>
+  </ol>
+  <p>代替：<code>claude mcp auth canva</code>（バージョンにより）</p>
+
+  <h3><span class="tag tag-step">STEP C</span>claude.ai コネクタ側の確認</h3>
+  <ul>
+    <li>デスクトップアプリまたは claude.ai → 左メニュー <strong>設定 → コネクタ</strong></li>
+    <li><strong>Canva</strong> を探す
+      <ul>
+        <li>「接続する」ボタン → 未接続。押して OAuth 完了させる</li>
+        <li>「切断する」ボタン → 接続済み（正常）</li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="callout">
+    <strong>⚠️ 重要な仕様</strong><br>
+    ・ツール一覧は<strong>会話開始時に固定</strong>される。会話の途中で MCP を追加・再認証しても、その会話には反映されない → <strong>必ず新しいセッションを開く</strong><br>
+    ・非対話（headless／バックグラウンド）セッションでは OAuth フローを実行できない → <strong>必ずインタラクティブな <code>claude</code> ターミナルで認証</strong><br>
+    ・認証は一度完了すれば、以後の新セッションで自動的に使える
+  </div>
+
+  <h3>🔍 検証ずみ復旧例（2026-07-03）</h3>
+  <ul>
+    <li>症状：<code>mcp__plugin_small-business_canva__*</code> が Tool Search でヒットしない</li>
+    <li>実際の状態：<code>claude mcp list</code> に canva が未登録</li>
+    <li>対処：STEP A で登録 → <code>Needs authentication</code> → 別ターミナルで STEP B → 新セッションで復活</li>
+  </ul>
+</div>
+
+<footer>
+  ゼロハチ株式会社マニュアル｜最終更新：2026-07-03
+</footer>
+
+</div>
+</body>
+</html>
