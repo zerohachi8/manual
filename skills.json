@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-01",
+  "generated_at": "2026-07-24",
   "categories": [
     {
       "name": "コーディング・開発",
@@ -74,8 +74,8 @@
       "desc": "アイデアブレスト、仕様書／PRD、ロードマップ整理",
       "skills": [
         {"name":"/product-brainstorming","desc":"プロダクトアイデアのブレスト・問題空間の探索・仮説の壁打ち。PMの思考整理パートナー","category":"product"},
-        {"name":"/roadmap-update","desc":"プロダクトロードマップの更新・新規作成・優先順位調整。Now/Next/Later 整理","category":"product"},
-        {"name":"/write-spec","desc":"アイデア→機能仕様書/PRD化。ゴール・非ゴール、成功指標、受入条件、段階分割","category":"product"}
+        {"name":"/roadmap-update","desc":"プロダクトロードマップの更新・新規作成・優先順位調整。Now/Next/Later 整理【出力：チャットのみ・ファイル生成なし】","category":"product"},
+        {"name":"/write-spec","desc":"アイデア→機能仕様書/PRD化。ゴール・非ゴール、成功指標、受入条件、段階分割【出力：チャットのみ・ファイル生成なし】","category":"product"}
       ]
     },
     {
@@ -124,13 +124,18 @@
       "icon": "📁",
       "desc": "各プロジェクトの .claude/commands/ にある独自スラッシュコマンド",
       "skills": [
+        {"name":"/approve","desc":"承認済みタスクを、宣言→調査→検証ループ→報告の順で厳密に実行する","project":"frontjournal"},
         {"name":"/create-article","desc":"新しい記事をテンプレートから作る。テンプレ選択メニューを表示し、選んだ種別の手順書に沿って制作を開始する。「記事を作成して」でも起動。","project":"frontjournal"},
+        {"name":"/create-company-page","desc":"企業ページ（/companies/{slug}.html）を統合マニュアルに沿って作る。本文＋図解＋公開までを1コマンドで承認ワークフロー化。「企業ページ作成」でも起動。","project":"frontjournal"},
         {"name":"/daily-log","desc":"本日の作業ログ＋プロジェクト別タスク一覧を表示。必ず末尾に「ご利用メニュー＋タスク一覧」パネルを表示する。","project":"zerohachi"},
+        {"name":"/daily-update","desc":"/biz（補助金・入札・NEDO・JST・展示会）と /news（研究＋実体PR TIMES）を一括で取得・公開・pushする統合コマンド。「今日の更新して」でも起動。","project":"frontjournal"},
         {"name":"/design-critique","desc":"Designerロールで UI/レイアウトを批評する（参考URL・スクショ持ち込み歓迎）","project":"readnavi"},
         {"name":"/frontjour-summary","desc":"Slack #frontjour に共有された参考記事URLを定型フォーマットで要約し、ドライブのログファイルに追記＋Slackスレッドへ返信する。","project":"frontjournal"},
         {"name":"/git-tasks","desc":"現在のリポジトリの GitHub Issue を一覧表示する（初心者向けGUI形式・Task list進捗バー付き）。「タスク教えて」でも起動。","project":"frontjournal"},
+        {"name":"/git-tasks","desc":"現在のリポジトリの GitHub Issue を一覧表示する（初心者向けGUI形式・Task list進捗バー付き）。「タスク教えて」でも起動。","project":"jobhakase"},
         {"name":"/git-tasks","desc":"現在のリポジトリの GitHub Issue を一覧表示する（初心者向けGUI形式・Task list進捗バー付き）。「タスク教えて」でも起動。","project":"zerohachi"},
         {"name":"/plan","desc":"機能追加・改修の設計ドラフトを出す（Engineering Manager + CEOロール）","project":"readnavi"},
+        {"name":"/propose","desc":"実装せず、要件定義と3案以上の提案のみ。質問は1テーブルに集約し、承認まで着手しない","project":"frontjournal"},
         {"name":"/review","desc":"WEBサイトのカード・余白・タイポを横断審査する（QA/Designerロール）","project":"readnavi"},
         {"name":"/update-spec","desc":"仕様書（docs/SPEC.md）を最新の変更内容に同期し、Git にコミット＆プッシュ。Google ドライブにもコピー保存する。","project":"frontjournal"}
       ]
