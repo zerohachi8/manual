@@ -126,7 +126,6 @@
       "icon": "📁",
       "desc": "各プロジェクトの .claude/commands/ にある独自スラッシュコマンド",
       "skills": [
-        {"name":"/approve","desc":"承認済みタスクを、宣言→調査→検証ループ→報告の順で厳密に実行する","project":"frontjournal"},
         {"name":"/create-article","desc":"新しい記事をテンプレートから作る。テンプレ選択メニューを表示し、選んだ種別の手順書に沿って制作を開始する。「記事を作成して」でも起動。","project":"frontjournal"},
         {"name":"/create-company-page","desc":"企業ページ（/companies/{slug}.html）を統合マニュアルに沿って作る。本文＋図解＋公開までを1コマンドで承認ワークフロー化。「企業ページ作成」でも起動。","project":"frontjournal"},
         {"name":"/daily-log","desc":"本日の作業ログ＋プロジェクト別タスク一覧を表示。必ず末尾に「ご利用メニュー＋タスク一覧」パネルを表示する。","project":"zerohachi"},
@@ -137,9 +136,7 @@
         {"name":"/git-tasks","desc":"現在のリポジトリの GitHub Issue を一覧表示する（初心者向けGUI形式・Task list進捗バー付き）。「タスク教えて」でも起動。","project":"jobhakase"},
         {"name":"/git-tasks","desc":"現在のリポジトリの GitHub Issue を一覧表示する（初心者向けGUI形式・Task list進捗バー付き）。「タスク教えて」でも起動。","project":"zerohachi"},
         {"name":"/plan","desc":"機能追加・改修の設計ドラフトを出す（Engineering Manager + CEOロール）","project":"readnavi"},
-        {"name":"/propose","desc":"実装せず、要件定義と3案以上の提案のみ。質問は1テーブルに集約し、承認まで着手しない","project":"frontjournal"},
-        {"name":"/review","desc":"WEBサイトのカード・余白・タイポを横断審査する（QA/Designerロール）","project":"readnavi"},
-        {"name":"/update-spec","desc":"仕様書（docs/SPEC.md）を最新の変更内容に同期し、Git にコミット＆プッシュ。Google ドライブにもコピー保存する。","project":"frontjournal"}
+        {"name":"/review","desc":"WEBサイトのカード・余白・タイポを横断審査する（QA/Designerロール）","project":"readnavi"}
       ]
     }
   ]
