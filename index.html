@@ -806,8 +806,15 @@ async function renderSkills(el) {
         <table class="skill-table">${starred.map(renderSkillRow).join('')}</table>
       </section>` : '';
     const sections = data.categories.map((cat,i) => {
-      // A-Z順にソート（superpowers系の章タイトル【】も活かしてサブグループ化）
-      const sorted = [...cat.skills].sort((a,b)=>a.name.localeCompare(b.name));
+      // 章タイトル(【】)優先でグルーピング → 章内は名前順、章なしは末尾（superpowers系の断片化を防ぐ）
+      const SECTION_ORDER = ['コアワークフロー','実装支援','Git運用','品質保証','レビュー','メタ'];
+      const secOf = s => { const m=(s.desc||'').match(/^【([^】]+)】/); return m?m[1]:null; };
+      const secRank = name => { if(name===null) return 999; const i=SECTION_ORDER.indexOf(name); return i<0?500:i; };
+      const sorted = [...cat.skills].sort((a,b)=>{
+        const ra=secRank(secOf(a)), rb=secRank(secOf(b));
+        if (ra!==rb) return ra-rb;
+        return a.name.localeCompare(b.name);
+      });
       // 説明文の冒頭【章タイトル】を検出してサブ見出しを挿入
       let rows = '';
       let currentSection = null;
