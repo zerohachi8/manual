@@ -851,6 +851,13 @@ async function renderSkills(el) {
           </div>
           <button class="skills-reload" onclick="skillsCache=null;renderSkills(document.getElementById('content'))">🔄 再読込</button>
         </div>
+        <div class="skill-guide">
+          <div class="skill-guide-hdr">📝 記事作成のときのスキルの使い方</div>
+          <ul class="skill-guide-list">
+            <li><b>「マニュアルを読む → 最後に検証 → 出力」</b>に一番効くのは <code>/verification-before-completion</code>（証拠を確認するまで「完了」と言わせない）。記事の理想形「読む→書く→検証」をやるなら、<code>/executing-plans</code>（または <code>/subagent-driven-development</code>）＋ <code>/verification-before-completion</code> を組み合わせる。</li>
+            <li><b>工程を右側の「タスク」チェックリスト（TodoWrite）として並べたい</b>ときは、まず <code>/writing-plans</code> で2〜5分粒度の計画書を作り、<code>/executing-plans</code>（または <code>/subagent-driven-development</code>）で実行する。<span class="skill-guide-note">※右側に項目を展開するのは実行側のスキル。</span></li>
+          </ul>
+        </div>
         <nav class="skill-nav">${nav}</nav>
         ${starredSection}
         ${sections}
@@ -865,6 +872,14 @@ async function renderSkills(el) {
         .skills-meta { font-size:12px; color:var(--muted); }
         .skills-reload { padding:8px 14px; font-size:13px; background:var(--white); border:1px solid var(--border); border-radius:6px; cursor:pointer; font-family:inherit; }
         .skills-reload:hover { background:var(--hover); }
+        /* 用途別ガイド（記事作成） */
+        .skill-guide { background:#f0f6ff; border:1px solid #cfe0f7; border-left:4px solid var(--primary); border-radius:6px; padding:12px 16px; margin-bottom:16px; }
+        .skill-guide-hdr { font-size:14px; font-weight:bold; color:var(--primary); margin-bottom:8px; }
+        .skill-guide-list { margin:0; padding-left:18px; }
+        .skill-guide-list li { font-size:12.5px; color:var(--gray1); line-height:1.6; margin-bottom:6px; }
+        .skill-guide-list li:last-child { margin-bottom:0; }
+        .skill-guide-list code { background:#e8eef7; color:#2a5599; padding:1px 6px; border-radius:3px; font-size:12px; font-weight:bold; font-family:'SF Mono','Menlo','Consolas',monospace; }
+        .skill-guide-note { color:var(--muted); }
         .skill-nav { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
         .skill-nav-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; background:var(--white); border:1px solid var(--border); border-radius:20px; font-size:12px; color:var(--text); text-decoration:none; transition:all .15s; }
         .skill-nav-pill:hover { background:var(--primary); color:var(--white); border-color:var(--primary); }
