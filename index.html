@@ -684,6 +684,41 @@ async function renderGhRepos(el) {
         <span style="font-weight:bold">${repos.length} リポジトリ</span>
       </div>
       ${rows || '<div class="gh-loading">リポジトリなし</div>'}
+    </div>
+
+    <div style="margin-top: 30px; margin-bottom: 30px;">
+      <h3 style="font-size: 15px; font-weight: bold; margin-bottom: 10px; color: var(--text);">📁 ローカルプロジェクトパス</h3>
+      <table class="dtable" style="font-size: 13px;">
+        <thead>
+          <tr>
+            <th style="width: 20%;">プロジェクト</th>
+            <th style="width: 40%;">用途</th>
+            <th style="width: 40%;">ローカルパス</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>FrontJournal</strong></td>
+            <td>ディープテック企業紹介メディア</td>
+            <td style="font-family: 'Courier New', monospace; font-size: 12px; word-break: break-all;">/Users/aiito/projects/frontjournal</td>
+          </tr>
+          <tr>
+            <td><strong>仕事博士</strong></td>
+            <td>タスク分解AI（β版）</td>
+            <td style="font-family: 'Courier New', monospace; font-size: 12px; word-break: break-all;">/Users/aiito/projects/jobhakase</td>
+          </tr>
+          <tr>
+            <td><strong>aismobiz</strong></td>
+            <td>AI営業支援ツール</td>
+            <td style="font-family: 'Courier New', monospace; font-size: 12px; word-break: break-all;">/Users/aiito/projects/aismobiz</td>
+          </tr>
+          <tr>
+            <td><strong>task_ai</strong></td>
+            <td>タスク分解AI</td>
+            <td style="font-family: 'Courier New', monospace; font-size: 12px; word-break: break-all;">/Users/aiito/projects/task_ai</td>
+          </tr>
+        </tbody>
+      </table>
     </div>`;
 }
 
