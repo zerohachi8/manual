@@ -789,18 +789,10 @@ async function toggleStar(name, btnEl) {
   }
   renderSkills(document.getElementById('content'));
 }
-async function copySkillName(name, el) {
-  try {
-    await navigator.clipboard.writeText(name);
-    el.classList.add('skill-copied');
-    setTimeout(()=>el.classList.remove('skill-copied'), 700);
-  } catch(e) { console.error(e); }
-}
-
 function renderSkillRow(s) {
   const isStar = !!starredSkills[s.name];
   const star = `<button class="skill-star${isStar?' on':''}" onclick="event.stopPropagation();toggleStar('${esc(s.name)}',this)" title="${isStar?'重要を解除':'重要に登録'}">${isStar?'★':'☆'}</button>`;
-  const code = `<code class="skill-code${isStar?' important':''}" onclick="copySkillName('${esc(s.name)}',this)" title="クリックでコピー">${esc(s.name)}</code>`;
+  const code = `<code class="skill-code${isStar?' important':''}">${esc(s.name)}</code>`;
   const tag = s.project?`<span class="skill-tag">${esc(s.project)}</span>`:'';
   return `<tr>
     <td class="skill-td-star">${star}</td>
@@ -1161,11 +1153,8 @@ async function renderSkills(el) {
         .skill-star:hover { transform:scale(1.2); color:#e6a700; }
         .skill-star.on { color:#ff4d4f; }
         .skill-td-name { width:200px; white-space:nowrap; }
-        .skill-code { background:#e8eef7; color:#2a5599; padding:2px 7px; border-radius:3px; font-size:12px; font-weight:bold; font-family:'SF Mono','Menlo','Consolas',monospace; cursor:pointer; user-select:none; transition:background .15s; display:inline-block; }
-        .skill-code:hover { background:#d3deef; }
+        .skill-code { background:#e8eef7; color:#2a5599; padding:2px 7px; border-radius:3px; font-size:12px; font-weight:bold; font-family:'SF Mono','Menlo','Consolas',monospace; cursor:text; user-select:text; display:inline-block; }
         .skill-code.important { background:#ffe2e2; color:#c0292b; }
-        .skill-code.important:hover { background:#ffcccc; }
-        .skill-code.skill-copied { background:#1f9d55 !important; color:#fff !important; }
         .skill-tag { display:inline-block; background:#f3eaea; color:var(--primary); padding:1px 5px; border-radius:3px; font-size:10px; margin-left:4px; font-weight:bold; }
         .skill-td-desc { font-size:12px; color:var(--gray1); }
         /* 重要セクション */
