@@ -518,13 +518,6 @@
           "kind": "claude.ai提供"
         },
         {
-          "name": "/skills-sync",
-          "want": "このマニュアルのスキル一覧を最新にしたい",
-          "desc": "手元のスキルを調べて、マニュアルの skills.json を更新します。",
-          "example": "/skills-sync 差分だけ見せて。反映は私が承認してから",
-          "kind": "自作"
-        },
-        {
           "name": "/update-spec",
           "want": "仕様書を最新にしたい",
           "desc": "仕様書を更新し、Git とGoogleドライブへ反映します。",
