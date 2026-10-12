@@ -1,142 +1,543 @@
 {
-  "generated_at": "2026-07-27",
+  "generated_at": "2026-10-12",
   "categories": [
     {
-      "name": "コーディング・開発",
+      "name": "コードを書く・動かす",
       "icon": "💻",
-      "desc": "コードの設計・実装・レビュー・デバッグ・テスト時に使う",
+      "desc": "プログラムを作る・動かす・整理するときに使う",
       "skills": [
-        {"name":"/architecture","desc":"ADR（アーキテクチャ決定記録）の作成・評価。技術選定（例：Kafka vs SQS）、設計レビュー、トレードオフ整理","category":"code"},
-        {"name":"/claude-api","desc":"Claude API / Anthropic SDK アプリの開発・デバッグ・最適化支援","category":"code"},
-        {"name":"/code-review","desc":"現在の差分をレビュー（low〜ultra で深度調整、--fix で自動修正）","category":"code"},
-        {"name":"/code-review","desc":"コード変更レビュー（セキュリティ・パフォーマンス・正しさ・N+1・インジェクション・エッジケース）","category":"code"},
-        {"name":"/debug","desc":"構造化デバッグ（再現→切り分け→診断→修正）。エラーログ、本番/staging差分の調査","category":"code"},
-        {"name":"/init","desc":"プロジェクト用 CLAUDE.md を自動生成","category":"code"},
-        {"name":"/playwright","desc":"自然言語でブラウザ操作（クリック・入力・スクショ・PDF化）。ログイン要サイトの情報収集・定期投稿・E2Eテストを自動化","category":"code"},
-        {"name":"/review","desc":"GitHub Pull Request のレビュー","category":"code"},
-        {"name":"/run","desc":"プロジェクトのアプリを起動して動作確認","category":"code"},
-        {"name":"/security-review","desc":"現ブランチの未マージ変更にセキュリティ監査を実施","category":"code"},
-        {"name":"/simplify","desc":"コードの簡素化・再利用・効率化を実施（バグ探索は行わない）","category":"code"},
-        {"name":"/testing-strategy","desc":"テスト戦略・テスト計画の設計。カバレッジ・テストピラミッド・テスト構成","category":"code"},
-        {"name":"/verify","desc":"コード変更が要件通り動くかアプリ起動で検証","category":"code"}
+        {
+          "name": "/init",
+          "want": "このフォルダ用の説明書(CLAUDE.md)を作りたい",
+          "desc": "プロジェクトの構成や手順を調べて、Claudeが読む説明書を自動で作ります。",
+          "example": "/init",
+          "kind": "Claude Code標準"
+        },
+        {
+          "name": "/run",
+          "want": "作ったアプリを実際に動かして見たい",
+          "desc": "アプリを起動して、動いている様子を確認します。",
+          "example": "/run 今回の変更を入れたアプリを起動して、画面を確認して",
+          "kind": "Claude Code標準"
+        },
+        {
+          "name": "/verify",
+          "want": "変更が狙い通りに動くか確かめたい",
+          "desc": "アプリを実際に動かして、変更が意図通りか観察して判定します。",
+          "example": "/verify ログイン画面で、空欄のまま送信したときの表示を確認して",
+          "kind": "Claude Code標準"
+        },
+        {
+          "name": "/simplify",
+          "want": "ごちゃごちゃしたコードを整理したい",
+          "desc": "変更したコードの重複や無駄を見つけて整理します。動き方は変えません。",
+          "example": "/simplify 未コミットの変更を整理して。何を変えたか一覧で教えて",
+          "kind": "Claude Code標準"
+        },
+        {
+          "name": "/claude-api",
+          "want": "Claude APIを使うアプリを作りたい",
+          "desc": "Claude API・SDKの最新の使い方(モデル名や設定)を読み込んでから作業します。",
+          "example": "/claude-api 既存の呼び出しコードを最新モデルに移行する変更点を洗い出して。まだ変更はしないで",
+          "kind": "Claude Code標準"
+        },
+        {
+          "name": "/architecture",
+          "want": "技術の選び方を比較して記録したい",
+          "desc": "選択肢を比べて、決定理由を記録(ADR)として残します。",
+          "example": "/architecture 検索機能を自前で作るか外部サービスを使うか、比較して記録を書いて",
+          "kind": "自作"
+        },
+        {
+          "name": "/testing-strategy",
+          "want": "何をどうテストするか計画したい",
+          "desc": "テストの種類と優先順位を整理した計画を作ります。",
+          "example": "/testing-strategy 決済機能に必要なテストを、優先順位つきで表にして",
+          "kind": "自作"
+        },
+        {
+          "name": "/documentation",
+          "want": "READMEなどの文書を書きたい",
+          "desc": "READMEや手順書などの技術文書を作ります。",
+          "example": "/documentation このリポジトリのREADMEを、セットアップ手順とよくあるエラーの2章で書き直して",
+          "kind": "自作"
+        }
       ]
     },
     {
-      "name": "デザイン・UI",
-      "icon": "🎨",
-      "desc": "デザイン批評・デザインシステム・アクセシビリティ・UXコピー・イラスト",
+      "name": "不具合・品質チェック",
+      "icon": "🐞",
+      "desc": "動かない・直したいとき／「完了」と言う前に確認したいときに使う",
       "skills": [
-        {"name":"/accessibility-review","desc":"WCAG 2.1 AA 基準でアクセシビリティ監査（色コントラスト・キーボード操作・タッチ領域・スクリーンリーダー対応）","category":"design"},
-        {"name":"/brand-guidelines","desc":"指定したブランドカラーやタイポグラフィを生成物（スライド・LP・画像）に反映させる","category":"design"},
-        {"name":"/canvas-design","desc":"デザイン哲学に基づいた高品質ビジュアルアート（PNG・PDF）を作成","category":"design"},
-        {"name":"/design-critique","desc":"デザインに構造化フィードバック（使いやすさ・情報階層・一貫性）。Figma URLやスクショ対応","category":"design"},
-        {"name":"/design-handoff","desc":"デザイン→エンジニア向け仕様書を生成（レイアウト・デザイントークン・状態・アニメーション・レスポンシブ）","category":"design"},
-        {"name":"/design-system","desc":"デザインシステムの監査・ドキュメント化・拡張。命名一貫性、ハードコード値検出、新パターン設計","category":"design"},
-        {"name":"/drawkit-fetch","desc":"DrawKit の無料イラストパックをローカルキャッシュから検索して埋め込む半自動スキル。`/drawkit-fetch` で呼び出す。初回のみ手動DL、2回目以降はキャッシュ自動取得","category":"design"},
-        {"name":"/frontend-design","project":"frontend-design","desc":"洗練されたUIのHTML/CSS/JSを自動生成。「AIで作った感」を排除したモダンなLP・コーポレートサイト構築。UI作業中に自動起動","category":"design"},
-        {"name":"/icon-find","desc":"アイコンをキーワード検索して返す。①自前ライブラリ948点（フルカラーPNG）②Google Material Symbols Rounded 4258点（単色Webフォント・FILL1/wght400/GRAD200/opsz20）。日英シノニム表でヒット率向上。「アイコン探して」「Material Symbols」「icon-find」で起動","category":"design"},
-        {"name":"/pixabay-fetch","desc":"Pixabay API から記事サムネ・バナー用の写真を取得。3候補生成→Read確認→採点表→採用の半自動フロー。API key は aismobiz/.env を流用（保管済）。Pixabay License（商用OK・帰属表示不要）。「サムネ画像が欲しい」「背景写真」で起動","category":"design"},
-        {"name":"/svgrepo-fetch","desc":"SVGRepo から50万点超のSVGを取得して埋め込む。スライド・HTML・バナー・サムネ作成時に。CC0/MIT中心（商用OK）。unDrawに無い素材の代替として使う","category":"design"},
-        {"name":"/undraw-fetch","desc":"unDraw API から SVG イラストを自動取得（MIT・商用OK・帰属表示不要）。スライド/HTML/画像作成時に自動適用","category":"design"},
-        {"name":"/ux-copy","desc":"UXコピーの作成・レビュー。ボタン文言・エラーメッセージ・空状態・CTA・オンボ文言","category":"design"}
+        {
+          "name": "/superpowers:systematic-debugging",
+          "want": "原因が分からない不具合を調べたい",
+          "desc": "当てずっぽうで直さず、再現→原因の特定→最小の修正の順で進めます。",
+          "example": "/superpowers:systematic-debugging 本番だけ注文が二重に登録される原因を、再現条件から調べて",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/superpowers:test-driven-development",
+          "want": "先にテストを書いてから作りたい",
+          "desc": "失敗するテストを先に書き、通るように作り、最後に整えます。",
+          "example": "/superpowers:test-driven-development 税込み価格の丸め処理を、テストを先に書いて実装して",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/superpowers:verification-before-completion",
+          "want": "「完了」と言う前に本当に動くか確かめたい",
+          "desc": "テストやビルドを実際に実行し、結果を見てから完了を報告させます。",
+          "example": "/superpowers:verification-before-completion 完了と言う前に、テストとビルドを実行して結果を見せて",
+          "kind": "追加機能（プラグイン）"
+        }
       ]
     },
     {
-      "name": "ドキュメント・資料作成",
-      "icon": "📝",
-      "desc": "Word/PDF/PowerPoint/Excel の作成・編集、技術文書、PDF/動画の取り込み",
-      "skills": [
-        {"name":"/docx","project":"anthropic-skills","desc":"Word 文書（.docx）の作成・編集・読み取り","category":"docs"},
-        {"name":"/pdf","project":"anthropic-skills","desc":"PDF 操作（結合・分割・OCR・フォーム入力・暗号化）","category":"docs"},
-        {"name":"/pptx","project":"anthropic-skills","desc":"PowerPoint スライドの作成・編集・テキスト抽出","category":"docs"},
-        {"name":"/xlsx","project":"anthropic-skills","desc":"Excel・CSV ファイルの作成・編集・整形","category":"docs"},
-        {"name":"/documentation","desc":"技術文書の執筆（README・APIドキュメント・アーキテクチャ文書・運用Runbook・オンボーディング）","category":"docs"},
-        {"name":"/natural-japanese","desc":"AIっぽい機械的な日本語を、人間らしい自然な文章にリライト。note記事・ブログ・SNS・メール本文に。reference/に過去記事を置くとトーン再現","category":"docs"},
-        {"name":"/pdf-import","desc":"PDF・スライド・画像を Google ドライブ「他社資料・セミナー」フォルダへ整理保存。YYMMDD_ 命名で要約付き","category":"docs"},
-        {"name":"/progress-report","desc":"「進捗報告」「社長報告」「/progress-report」で起動。Git履歴・TASKS.md・GitHub Issueから完了/未完了を自動抽出し、社長報告用プレーンテキストを生成。初見でも理解できる体言止め・【】■・区切り・「／」まとめで出力。出力前に3観点でダブルチェック","category":"docs"},
-        {"name":"/youtube-import","desc":"YouTube動画URLを検出すると自動起動し、文字起こし＋要約＋Wordドキュメント保存＋Driveへの保存まで完結。URL貼付け、「文字起こし」「要約」「議事録化」「ドライブに入れて」でも起動","category":"docs"}
-      ]
-    },
-    {
-      "name": "リサーチ・情報収集",
+      "name": "レビュー・安全確認",
       "icon": "🔍",
-      "desc": "Web 深掘り調査、ユーザー調査、競合分析、リサーチ統合",
+      "desc": "変更内容を点検したいとき、脆弱性が無いか確認したいときに使う",
       "skills": [
-        {"name":"/competitive-brief","desc":"競合分析ブリーフ作成。プロダクト戦略・セールスバトルカード・差別化判断","category":"research"},
-        {"name":"/deep-research","desc":"多ソース Web 調査＋裏取り検証＋出典付きレポート生成","category":"research"},
-        {"name":"/research-synthesis","desc":"ユーザー調査の統合（インタビュー・サーベイ・サポート問い合わせ→テーマ抽出・推奨アクション）","category":"research"},
-        {"name":"/user-research","desc":"ユーザー調査の企画〜実施〜統合。リサーチ計画・インタビューガイド・ユーザビリティテスト・サーベイ設計","category":"research"}
+        {
+          "name": "/code-review",
+          "want": "変更内容にバグが無いか点検したい",
+          "desc": "現在の変更(差分)を調べて、問題点を重要な順に報告します。",
+          "example": "/code-review high 現在のブランチの変更を点検して。ファイルは変更せず、報告だけして",
+          "kind": "Claude Code標準"
+        },
+        {
+          "name": "/review",
+          "want": "Pull Requestを点検したい",
+          "desc": "/code-review と同じ働きの別名です。PR番号を付けるとそのPRを点検します。",
+          "example": "/review 1234",
+          "kind": "Claude Code標準"
+        },
+        {
+          "name": "/security-review",
+          "want": "セキュリティ上の問題が無いか確認したい",
+          "desc": "ブランチの変更を、情報漏えいや不正アクセスの観点で点検します。",
+          "example": "/security-review ログイン処理の変更に、危険な点が無いか確認して",
+          "kind": "Claude Code標準"
+        },
+        {
+          "name": "/superpowers:requesting-code-review",
+          "want": "マージ前にレビューを依頼したい",
+          "desc": "レビューしてほしい観点を整理して、点検を依頼します。",
+          "example": "/superpowers:requesting-code-review この機能の実装が仕様どおりか点検して",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/superpowers:receiving-code-review",
+          "want": "もらった指摘を正しく反映したい",
+          "desc": "指摘を鵜呑みにせず、妥当かを確かめてから反映します。",
+          "example": "/superpowers:receiving-code-review 次の指摘が妥当か確認してから反映して。(指摘を貼る)",
+          "kind": "追加機能（プラグイン）"
+        }
       ]
     },
     {
-      "name": "プロダクト企画・戦略",
-      "icon": "📊",
-      "desc": "アイデアブレスト、仕様書／PRD、ロードマップ整理",
+      "name": "デザイン・画像・素材",
+      "icon": "🎨",
+      "desc": "画面づくり・デザイン批評・素材集めに使う",
       "skills": [
-        {"name":"/product-brainstorming","desc":"プロダクトアイデアのブレスト・問題空間の探索・仮説の壁打ち。PMの思考整理パートナー","category":"product"},
-        {"name":"/roadmap-update","desc":"プロダクトロードマップの更新・新規作成・優先順位調整。Now/Next/Later 整理【出力：チャットのみ・ファイル生成なし】","category":"product"},
-        {"name":"/write-spec","desc":"アイデア→機能仕様書/PRD化。ゴール・非ゴール、成功指標、受入条件、段階分割【出力：チャットのみ・ファイル生成なし】","category":"product"}
+        {
+          "name": "/frontend-design:frontend-design",
+          "want": "見栄えの良い画面(HTML/CSS)を作りたい",
+          "desc": "テンプレ感の薄い、意図のあるデザインで画面を作ります。",
+          "example": "/frontend-design:frontend-design 申請フォームの画面を、入力しやすい形で作って",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/design-critique",
+          "want": "デザインの良し悪しを評価してほしい",
+          "desc": "画像やFigma URLを見て、使いやすさ・見た目の整理・一貫性を評価します。",
+          "example": "/design-critique このダッシュボード画面を評価して(画像を添付)",
+          "kind": "自作"
+        },
+        {
+          "name": "/design:accessibility-review",
+          "want": "誰でも使いやすいか確認したい",
+          "desc": "色の見やすさやキーボード操作など、アクセシビリティの基準で点検します。",
+          "example": "/design:accessibility-review このページを、色の見やすさとキーボード操作を中心に点検して",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/design:ux-copy",
+          "want": "ボタンやエラーの文言を考えたい",
+          "desc": "ボタン名・エラーメッセージ・案内文を作ったり見直したりします。",
+          "example": "/design:ux-copy 保存に失敗したときのメッセージを、原因と次の操作が分かる形で3案出して",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/design:design-handoff",
+          "want": "デザインをエンジニア向けの仕様にしたい",
+          "desc": "デザインから、余白・色・状態などをまとめた引き継ぎ資料を作ります。",
+          "example": "/design:design-handoff この画面の実装用の仕様書を作って(画像を添付)",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/design-system",
+          "want": "部品や色の決まりを整理したい",
+          "desc": "デザインの部品や色・名前の統一を点検し、文書にまとめます。",
+          "example": "/design-system ボタンの名前と色のばらつきを洗い出して",
+          "kind": "自作"
+        },
+        {
+          "name": "/anthropic-skills:canvas-design",
+          "want": "ポスターなどのビジュアルを作りたい",
+          "desc": "PNG・PDFのポスターやビジュアルを作ります。",
+          "example": "/anthropic-skills:canvas-design A4縦のセミナー告知ポスターを、紺と白で作って",
+          "kind": "claude.ai提供"
+        },
+        {
+          "name": "/undraw-fetch",
+          "want": "フラットなイラストを入れたい",
+          "desc": "unDrawからイラスト(SVG)を探して埋め込みます。商用利用可。",
+          "example": "/undraw-fetch 「データ分析」のイラストを探してスライドに入れて",
+          "kind": "自作"
+        },
+        {
+          "name": "/svgrepo-fetch",
+          "want": "SVGの素材を入れたい",
+          "desc": "SVGRepoからSVG素材を探して埋め込みます。",
+          "example": "/svgrepo-fetch 「メール」のアイコンを3つ探して",
+          "kind": "自作"
+        },
+        {
+          "name": "/pixabay-fetch",
+          "want": "記事用の写真を探したい",
+          "desc": "Pixabayから写真を3候補探し、比べて選べるようにします。",
+          "example": "/pixabay-fetch 「オフィス 会議」の写真を3候補出して",
+          "kind": "自作"
+        },
+        {
+          "name": "/icon-find",
+          "want": "アイコンを探したい",
+          "desc": "自前ライブラリとMaterial Symbolsからアイコンを探します。",
+          "example": "/icon-find 「請求書」のアイコンを3候補出して",
+          "kind": "自作"
+        },
+        {
+          "name": "/drawkit-fetch",
+          "want": "DrawKitのイラストを使いたい",
+          "desc": "手元に保存したDrawKitのパックから検索して埋め込みます。初回は手動ダウンロードが必要です。",
+          "example": "/drawkit-fetch 「チーム」のイラストを探して",
+          "kind": "自作"
+        }
       ]
     },
     {
-      "name": "タスク・進捗管理",
-      "icon": "📋",
-      "desc": "Google Tasks など TODO 管理",
+      "name": "資料・文書づくり",
+      "icon": "📄",
+      "desc": "Word・Excel・PowerPoint・PDFなどのファイルを作る・読む・直すときに使う",
       "skills": [
-        {"name":"/google-tasks","desc":"Google Tasks（tasks.google.com）への追加・一覧・更新・完了・削除。デフォルトリスト「マイタスク」","category":"task"}
+        {
+          "name": "/anthropic-skills:docx",
+          "want": "Word文書を作りたい・直したい",
+          "desc": "Word(.docx)の作成・編集・読み取りをします。",
+          "example": "/anthropic-skills:docx 添付の議事録を、見出し付きのWord文書に整えて",
+          "kind": "claude.ai提供"
+        },
+        {
+          "name": "/anthropic-skills:xlsx",
+          "want": "Excel・CSVを作りたい・整えたい",
+          "desc": "Excel(.xlsx)やCSVの作成・編集・整形をします。",
+          "example": "/anthropic-skills:xlsx 添付のCSVを月別に集計して、グラフ付きのExcelにして",
+          "kind": "claude.ai提供"
+        },
+        {
+          "name": "/anthropic-skills:pptx",
+          "want": "PowerPointを作りたい・直したい",
+          "desc": "スライド(.pptx)の作成・編集・文字の取り出しをします。",
+          "example": "/anthropic-skills:pptx 添付の企画書を、5枚のスライドにまとめて",
+          "kind": "claude.ai提供"
+        },
+        {
+          "name": "/anthropic-skills:pdf",
+          "want": "PDFを操作したい",
+          "desc": "PDFの結合・分割・文字の取り出し・フォーム入力などをします。",
+          "example": "/anthropic-skills:pdf 添付の3つのPDFを1つに結合して",
+          "kind": "claude.ai提供"
+        },
+        {
+          "name": "/natural-japanese",
+          "want": "AIっぽい文章を自然にしたい",
+          "desc": "機械的な日本語を、人が書いたような自然な文章に書き直します。",
+          "example": "/natural-japanese 次の本文を、意味を変えずに自然な口調に直して。(本文を貼る)",
+          "kind": "自作"
+        },
+        {
+          "name": "/pdf-import",
+          "want": "PDFや資料をドライブに整理して保存したい",
+          "desc": "資料をGoogleドライブの所定フォルダに、日付付きの名前で保存し、要約を添えます。",
+          "example": "/pdf-import 添付のセミナー資料をドライブに保存して、要約も付けて",
+          "kind": "自作"
+        },
+        {
+          "name": "/youtube-import",
+          "want": "YouTube動画を文字にして要約したい",
+          "desc": "動画の文字起こしと要約を作り、Word文書として保存します。",
+          "example": "/youtube-import (YouTubeのURLを貼る)",
+          "kind": "自作"
+        },
+        {
+          "name": "/progress-report",
+          "want": "社長への進捗報告を作りたい",
+          "desc": "Gitの履歴やIssueから、完了・未完了をまとめた報告文を作ります。",
+          "example": "/progress-report 今週の完了と未完了を、初めて見る人にも分かる形で出して",
+          "kind": "自作"
+        }
       ]
     },
     {
-      "name": "Claude Code 設定・運用",
+      "name": "調べる・企画する",
+      "icon": "🔎",
+      "desc": "調査・競合比較・アイデア出し・仕様づくりに使う",
+      "skills": [
+        {
+          "name": "/deep-research",
+          "want": "複数の情報源をしっかり調べたい",
+          "desc": "ウェブを多方面から調べ、出典付きのレポートにまとめます。",
+          "example": "/deep-research 国内の補助金制度を、出典付きで比較して",
+          "kind": "Claude Code標準"
+        },
+        {
+          "name": "/research-synthesis",
+          "want": "インタビューなどの結果をまとめたい",
+          "desc": "調査メモから共通点を見つけ、推奨する次の行動を整理します。",
+          "example": "/research-synthesis 以下のインタビュー5件から、よく出る課題を上位5つにまとめて",
+          "kind": "自作"
+        },
+        {
+          "name": "/design:user-research",
+          "want": "ユーザー調査を計画・設計したい",
+          "desc": "調査の計画、質問リスト、アンケート設計などを作ります。",
+          "example": "/design:user-research 新機能の利用者インタビューの質問リストを作って",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/product-management:competitive-brief",
+          "want": "競合を比較したい",
+          "desc": "競合サービスとの違いを1枚にまとめます。",
+          "example": "/product-management:competitive-brief A社とB社の機能・価格・強みを比較して",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/product-brainstorming",
+          "want": "アイデアを壁打ちしたい",
+          "desc": "新しい企画の発想を広げたり、穴を見つけたりする相手になります。",
+          "example": "/product-brainstorming 求人票からタスクを分解するサービスの弱点を一緒に探して",
+          "kind": "自作"
+        },
+        {
+          "name": "/product-management:write-spec",
+          "want": "アイデアを仕様書にしたい",
+          "desc": "機能の目的・成功の基準・受け入れ条件をまとめた仕様書(PRD)を作ります。",
+          "example": "/product-management:write-spec 通知設定機能の仕様書を、目的と成功の基準つきで書いて",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/product-management:roadmap-update",
+          "want": "ロードマップを更新したい",
+          "desc": "やること・次にやること・いつかやることに分けて、優先順位を整えます。",
+          "example": "/product-management:roadmap-update 今期の施策を Now / Next / Later に整理して",
+          "kind": "追加機能（プラグイン）"
+        }
+      ]
+    },
+    {
+      "name": "タスク・進め方の管理",
+      "icon": "✅",
+      "desc": "タスクの管理や、実行前の確認ルールに使う",
+      "skills": [
+        {
+          "name": "/google-tasks",
+          "want": "Googleタスクに追加・確認したい",
+          "desc": "Googleタスクの追加・一覧・完了・削除をします。",
+          "example": "/google-tasks 「請求書の確認」を明日の期限で追加して",
+          "kind": "自作"
+        },
+        {
+          "name": "/propose",
+          "want": "実行前に方針だけ出してほしい",
+          "desc": "実装はせず、要件の整理と3案以上の提案だけを出して、承認を待ちます。",
+          "example": "/propose ログイン画面の改善を、実装せずに3案で提案して",
+          "kind": "自作"
+        },
+        {
+          "name": "/approve",
+          "want": "承認した作業を実行してほしい",
+          "desc": "承認済みの作業を、宣言→調査→検証→報告の順に厳密に進めます。",
+          "example": "/approve 先ほど承認したA案で実装して",
+          "kind": "自作"
+        },
+        {
+          "name": "/approval-workflow",
+          "want": "「要件定義」「提案して」と頼みたい",
+          "desc": "要件定義→調査→複数案→承認待ちの流れで進めます。「要件定義」「提案して」と書くと自動で働きます。",
+          "example": "要件定義して。通知機能を追加したい",
+          "kind": "自作"
+        }
+      ]
+    },
+    {
+      "name": "開発の流れ（Superpowers）",
+      "icon": "🔁",
+      "desc": "新しい機能を作るときの、おすすめの順番。上から順に使う",
+      "skills": [
+        {
+          "name": "/superpowers:using-git-worktrees",
+          "want": "①作業用の別の場所を用意したい",
+          "desc": "今の作業を汚さないよう、独立した作業場所を作ります。",
+          "example": "/superpowers:using-git-worktrees 通知機能用の作業場所を作って",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/superpowers:brainstorming",
+          "want": "②作る前に要件と設計を固めたい",
+          "desc": "質問しながら要望を具体化し、設計案を比べます。作り始める前に使います。",
+          "example": "/superpowers:brainstorming 申請の通知機能を作る前に、要件と設計案A/Bを整理して",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/superpowers:writing-plans",
+          "want": "③実装の計画を作りたい",
+          "desc": "設計を、2〜5分で終わる小さな作業に分けた計画書にします。",
+          "example": "/superpowers:writing-plans 承認した設計を、小さな作業に分解して",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/superpowers:executing-plans",
+          "want": "④計画どおりに進めたい",
+          "desc": "計画書の作業を1つずつ、確認しながら実行します。",
+          "example": "/superpowers:executing-plans 作成した計画を、1作業ごとに確認を挟んで進めて",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/superpowers:subagent-driven-development",
+          "want": "④作業ごとに担当を分けて進めたい",
+          "desc": "作業ごとに別の担当(サブエージェント)に任せ、点検しながら進めます。",
+          "example": "/superpowers:subagent-driven-development 計画の各作業を担当を分けて進めて",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/superpowers:dispatching-parallel-agents",
+          "want": "④関係ない複数の作業を同時に進めたい",
+          "desc": "互いに影響しない作業を、複数の担当で同時に進めます。",
+          "example": "/superpowers:dispatching-parallel-agents 関係のない3つの修正を同時に進めて",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/superpowers:finishing-a-development-branch",
+          "want": "⑤作業を締めくくりたい",
+          "desc": "テストが通ったあと、取り込む・PRにする・片付ける、の選択肢を出します。",
+          "example": "/superpowers:finishing-a-development-branch 完了した。取り込み方の選択肢を出して",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/superpowers:using-superpowers",
+          "want": "どの機能を使うか迷った",
+          "desc": "状況に合う機能の探し方と使い分けを案内します。",
+          "example": "/superpowers:using-superpowers この作業にどの機能を使えばいいか教えて",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/superpowers:writing-skills",
+          "want": "自分用の機能(スキル)を作りたい",
+          "desc": "スキルの設計書(SKILL.md)の書き方に沿って作ります。",
+          "example": "/superpowers:writing-skills 毎週の議事録を整形するスキルを設計して",
+          "kind": "追加機能（プラグイン）"
+        }
+      ]
+    },
+    {
+      "name": "Claude Codeの設定・運用",
       "icon": "⚙️",
-      "desc": "設定ファイル・キーバインド・定期実行・スキル管理など Claude Code 自体の運用",
+      "desc": "Claude Codeそのものの設定や、定期実行・記憶の整理に使う",
       "skills": [
-        {"name":"/consolidate-memory","project":"anthropic-skills","desc":"使う時：メモリが増えて重複・古い情報が気になるとき／結果：重複統合・古い情報の除去でメモリを整理","category":"config"},
-        {"name":"/setup-cowork","project":"anthropic-skills","desc":"使う時：Coworkプラグインを初めて使うとき／結果：初期セットアップ手順をガイド","category":"config"},
-        {"name":"/skill-creator","project":"anthropic-skills","desc":"使う時：スキルを新規作成・改善・性能測定したいとき／結果：スキルの雛形作成〜eval測定まで支援","category":"config"},
-        {"name":"/approval-workflow","desc":"🛑 使う時：「要件定義」「提案して」等を含む依頼のとき（自動起動）／結果：GitHub Issue確認→要件定義→調査→複数案→承認待ちの流れで、勝手な実装を防ぎ安全に進む（Issue未登録なら作成を確認）","category":"config"},
-        {"name":"/approve","desc":"✅ 使う時：承認済みタスクを実行するとき／結果：宣言→調査→検証ループ→報告→コミット&プッシュで厳密実行し、飛ばし・未検証報告を防ぐ（完了後に対象ファイルをgit push）","category":"config"},
-        {"name":"/claude-automation-recommender","project":"claude-code-setup","desc":"使う時：Claude Codeの活用度を上げたいとき／結果：プロジェクトを診断しHooks/Subagents/Skills/MCPの具体的な改善案を提示","category":"config"},
-        {"name":"/claude-md-improver","project":"claude-md-management","desc":"使う時：CLAUDE.mdを見直したいとき／結果：品質をスコア化し、不足項目と改善案を提示して整理","category":"config"},
-        {"name":"/revise-claude-md","project":"claude-md-management","desc":"使う時：セッションの学びを残したいとき／結果：得た知見をCLAUDE.mdに自動追記","category":"config"},
-        {"name":"/fewer-permission-prompts","desc":"使う時：許可ダイアログが多くて煩わしいとき／結果：安全な頻出コマンドを自動許可化しダイアログを削減","category":"config"},
-        {"name":"/keybindings-help","desc":"使う時：ショートカットを変えたいとき／結果：キーバインドのカスタマイズ方法を案内","category":"config"},
-        {"name":"/loop","desc":"使う時：同じ処理を一定間隔で繰り返したいとき／結果：プロンプトやスラッシュコマンドを指定間隔で定期実行","category":"config"},
-        {"name":"/propose","desc":"📝 使う時：着手前に方針を固めたいとき／結果：実装せず要件定義＋3案以上を提示、質問は1テーブルに集約して承認を待つ（Issue未登録なら追加も提案に含める）","category":"config"},
-        {"name":"/schedule","desc":"使う時：決まった時刻に自動実行したいとき／結果：cronスケジュールでリモートエージェント（routine）を実行","category":"config"},
-        {"name":"/brainstorming","project":"superpowers","desc":"【コアワークフロー】使う時：新機能や施策を作り始める前／結果：要件を深掘りし設計案A/Bを比較、合意メモができる","category":"config"},
-        {"name":"/dispatching-parallel-agents","project":"superpowers","desc":"【実装支援】使う時：依存関係のないタスクが2つ以上あるとき／結果：複数エージェントが並列作業し所要時間を短縮","category":"config"},
-        {"name":"/executing-plans","project":"superpowers","desc":"【コアワークフロー】使う時：実装計画を実行するとき／結果：計画を1ステップずつ進め、要所で確認しながら完成させる","category":"config"},
-        {"name":"/finishing-a-development-branch","project":"superpowers","desc":"【Git運用】使う時：実装が完了しテストも通ったとき／結果：マージ／PR作成／後片付けの選択肢を提示し統合を完了","category":"config"},
-        {"name":"/receiving-code-review","project":"superpowers","desc":"【レビュー】使う時：レビュー指摘を受けたとき／結果：指摘を技術的に吟味して適切に反映（盲目的な追従を回避）","category":"config"},
-        {"name":"/requesting-code-review","project":"superpowers","desc":"【レビュー】使う時：タスク完了時やマージ前／結果：観点を整理したレビュー依頼を出し、要件充足を確認","category":"config"},
-        {"name":"/subagent-driven-development","project":"superpowers","desc":"【実装支援】使う時：独立した複数タスクを1セッションで回すとき／結果：タスクごとに専任サブエージェント＋2段階レビューで品質担保","category":"config"},
-        {"name":"/systematic-debugging","project":"superpowers","desc":"【品質保証】使う時：バグ・テスト失敗・不可解な挙動に出会ったとき／結果：4フェーズの根本原因分析で当てずっぽう修正を排除","category":"config"},
-        {"name":"/test-driven-development","project":"superpowers","desc":"【実装支援】使う時：機能やバグ修正のコードを書くとき／結果：先にテスト→実装→整理のRED-GREEN-REFACTORで動作を保証","category":"config"},
-        {"name":"/using-git-worktrees","project":"superpowers","desc":"【Git運用】使う時：現作業を汚さず別ブランチ作業を始めるとき／結果：独立した作業空間が用意され安全に並行開発できる","category":"config"},
-        {"name":"/using-superpowers","project":"superpowers","desc":"【メタ】使う時：作業の始めにどのスキルを使うか迷ったとき／結果：適切なスキルの探し方と適用判断がわかる","category":"config"},
-        {"name":"/verification-before-completion","project":"superpowers","desc":"【品質保証】使う時：「完了」「直った」と言う直前／結果：検証コマンドを実行して証拠を確認、根拠なき成功宣言を防ぐ","category":"config"},
-        {"name":"/writing-plans","project":"superpowers","desc":"【コアワークフロー】使う時：設計が固まり実装に入る前／結果：2〜5分粒度のタスクに分解した実装計画書ができる","category":"config"},
-        {"name":"/writing-skills","project":"superpowers","desc":"【メタ】使う時：新しいスキルを自作・改良するとき／結果：SKILL.mdの書き方に沿って再利用可能なスキルができる","category":"config"},
-        {"name":"/update-config","desc":"使う時：Claude Codeの挙動を設定で変えたいとき／結果：settings.jsonのHooks・パーミッション・環境変数を安全に設定","category":"config"}
-      ]
-    },
-    {
-      "name": "プロジェクト固有コマンド",
-      "icon": "📁",
-      "desc": "各プロジェクトの .claude/commands/ にある独自スラッシュコマンド",
-      "skills": [
-        {"name":"/create-article","desc":"新しい記事をテンプレートから作る。テンプレ選択メニューを表示し、選んだ種別の手順書に沿って制作を開始する。「記事を作成して」でも起動。","project":"frontjournal"},
-        {"name":"/create-company-page","desc":"企業ページ（/companies/{slug}.html）を統合マニュアルに沿って作る。本文＋図解＋公開までを1コマンドで承認ワークフロー化。「企業ページ作成」でも起動。","project":"frontjournal"},
-        {"name":"/daily-log","desc":"本日の作業ログ＋プロジェクト別タスク一覧を表示。必ず末尾に「ご利用メニュー＋タスク一覧」パネルを表示する。","project":"zerohachi"},
-        {"name":"/daily-update","desc":"/biz（補助金・入札・NEDO・JST・展示会）と /news（研究＋実体PR TIMES）を一括で取得・公開・pushする統合コマンド。「今日の更新して」でも起動。","project":"frontjournal"},
-        {"name":"/design-critique","desc":"Designerロールで UI/レイアウトを批評する（参考URL・スクショ持ち込み歓迎）","project":"readnavi"},
-        {"name":"/frontjour-summary","desc":"Slack #frontjour に共有された参考記事URLを定型フォーマットで要約し、ドライブのログファイルに追記＋Slackスレッドへ返信する。","project":"frontjournal"},
-        {"name":"/git-tasks","desc":"現在のリポジトリの GitHub Issue を一覧表示する（初心者向けGUI形式・Task list進捗バー付き）。「タスク教えて」でも起動。","project":"frontjournal"},
-        {"name":"/git-tasks","desc":"現在のリポジトリの GitHub Issue を一覧表示する（初心者向けGUI形式・Task list進捗バー付き）。「タスク教えて」でも起動。","project":"jobhakase"},
-        {"name":"/git-tasks","desc":"現在のリポジトリの GitHub Issue を一覧表示する（初心者向けGUI形式・Task list進捗バー付き）。「タスク教えて」でも起動。","project":"zerohachi"},
-        {"name":"/plan","desc":"機能追加・改修の設計ドラフトを出す（Engineering Manager + CEOロール）","project":"readnavi"},
-        {"name":"/review","desc":"WEBサイトのカード・余白・タイポを横断審査する（QA/Designerロール）","project":"readnavi"}
+        {
+          "name": "/update-config",
+          "want": "設定を変えたい",
+          "desc": "settings.json の許可・環境変数・自動処理(フック)を、依頼どおりに編集します。",
+          "example": "/update-config npm run test を許可リストに追加して。変更前に内容を見せて",
+          "kind": "Claude Code標準"
+        },
+        {
+          "name": "/fewer-permission-prompts",
+          "want": "確認ダイアログを減らしたい",
+          "desc": "過去の操作から安全な頻出コマンドを拾い、許可リストの追加案を作ります。",
+          "example": "/fewer-permission-prompts 追加する許可リストの案を先に見せて。承認するまで書き込まないで",
+          "kind": "Claude Code標準"
+        },
+        {
+          "name": "/keybindings-help",
+          "want": "ショートカットキーを変えたい",
+          "desc": "キーバインドの変更方法を案内します。",
+          "example": "/keybindings-help 送信のキーを変える手順を教えて",
+          "kind": "Claude Code標準"
+        },
+        {
+          "name": "/loop",
+          "want": "同じ作業を一定間隔で繰り返したい",
+          "desc": "指定した間隔で、指示を繰り返し実行します(セッションを開いている間)。",
+          "example": "/loop 10m デプロイの状態を確認して、変化があれば報告して",
+          "kind": "Claude Code標準"
+        },
+        {
+          "name": "/schedule",
+          "want": "決まった時刻に自動で実行したい",
+          "desc": "クラウド上で定期実行する予約(ルーチン)を作ります。",
+          "example": "/schedule 毎朝9時に、前日の更新をまとめて報告して",
+          "kind": "Claude Code標準"
+        },
+        {
+          "name": "/skill-creator:skill-creator",
+          "want": "新しいスキルを作りたい・直したい",
+          "desc": "スキルの作成・改善・性能測定を支援します。",
+          "example": "/skill-creator:skill-creator 議事録を要約するスキルを作って。まず仕様案を見せて",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/claude-md-management:claude-md-improver",
+          "want": "CLAUDE.mdを見直したい",
+          "desc": "CLAUDE.md の品質を点検し、改善案を出します。",
+          "example": "/claude-md-management:claude-md-improver CLAUDE.md の重複や古い記述を洗い出して。まだ編集しないで",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/claude-md-management:revise-claude-md",
+          "want": "今日の学びをCLAUDE.mdに残したい",
+          "desc": "このセッションで分かったことを CLAUDE.md に追記します。",
+          "example": "/claude-md-management:revise-claude-md 今回の作業で分かったことを追記して",
+          "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/anthropic-skills:consolidate-memory",
+          "want": "記憶(メモリ)を整理したい",
+          "desc": "重複や古い記憶を見つけて整理します。",
+          "example": "/anthropic-skills:consolidate-memory 重複や古い記憶を一覧にして。削除前に確認して",
+          "kind": "claude.ai提供"
+        },
+        {
+          "name": "/skills-sync",
+          "want": "このマニュアルのスキル一覧を最新にしたい",
+          "desc": "手元のスキルを調べて、マニュアルの skills.json を更新します。",
+          "example": "/skills-sync 差分だけ見せて。反映は私が承認してから",
+          "kind": "自作"
+        },
+        {
+          "name": "/update-spec",
+          "want": "仕様書を最新にしたい",
+          "desc": "仕様書を更新し、Git とGoogleドライブへ反映します。",
+          "example": "/update-spec",
+          "kind": "自作"
+        },
+        {
+          "name": "/setup-git-tasks",
+          "want": "GitHub Issueでタスク管理を始めたい",
+          "desc": "このプロジェクトに、Issueでのタスク管理の仕組みを入れます。",
+          "example": "/setup-git-tasks",
+          "kind": "自作"
+        }
       ]
     }
   ]

@@ -792,14 +792,16 @@ async function toggleStar(name, btnEl) {
 function renderSkillRow(s) {
   const isStar = !!starredSkills[s.name];
   const star = `<button class="skill-star${isStar?' on':''}" onclick="event.stopPropagation();toggleStar('${esc(s.name)}',this)" title="${isStar?'重要を解除':'重要に登録'}">${isStar?'★':'☆'}</button>`;
-  const code = `<code class="skill-code${isStar?' important':''}">${esc(s.name)}</code>`;
-  const tag = s.project?`<span class="skill-tag">${esc(s.project)}</span>`:'';
   return `<tr>
-    <td class="skill-td-star">${star}</td>
-    <td class="skill-td-name">${code}${tag}</td>
-    <td class="skill-td-desc">${esc(s.desc||'(説明なし)')}</td>
+    <td class="sk-star">${star}</td>
+    <td class="sk-want">${esc(s.want||'')}</td>
+    <td class="sk-cmd"><code class="skill-code${isStar?' important':''}">${esc(s.name)}</code></td>
+    <td class="sk-desc">${esc(s.desc||'')}</td>
+    <td class="sk-ex">${esc(s.example||'')}</td>
+    <td class="sk-kind">${esc(s.kind||'')}</td>
   </tr>`;
 }
+const SK_HEAD = '<thead><tr><th>★</th><th>やりたいこと</th><th>打つ言葉</th><th>何が起きるか</th><th>そのまま使える例文</th><th>種類</th></tr></thead>';
 
 async function renderSkills(el) {
   el.innerHTML = '<div style="padding:24px;color:#777">読み込み中...</div>';
@@ -830,44 +832,18 @@ async function renderSkills(el) {
           <span class="skill-cat-title">重要（よく使う）</span>
           <span class="skill-count">${starred.length} 件</span>
         </div>
-        <table class="skill-table">${starred.map(renderSkillRow).join('')}</table>
+        <div class="sk-scroll"><table class="sheet">${SK_HEAD}<tbody>${starred.map(renderSkillRow).join('')}</tbody></table></div>
       </section>` : '';
-    const sections = data.categories.map((cat,i) => {
-      // 章タイトル(【】)優先でグルーピング → 章内は名前順、章なしは末尾（superpowers系の断片化を防ぐ）
-      const SECTION_ORDER = ['コアワークフロー','実装支援','Git運用','品質保証','レビュー','メタ'];
-      const secOf = s => { const m=(s.desc||'').match(/^【([^】]+)】/); return m?m[1]:null; };
-      const secRank = name => { if(name===null) return 999; const i=SECTION_ORDER.indexOf(name); return i<0?500:i; };
-      const sorted = [...cat.skills].sort((a,b)=>{
-        const ra=secRank(secOf(a)), rb=secRank(secOf(b));
-        if (ra!==rb) return ra-rb;
-        return a.name.localeCompare(b.name);
-      });
-      // 説明文の冒頭【章タイトル】を検出してサブ見出しを挿入
-      let rows = '';
-      let currentSection = null;
-      sorted.forEach(s => {
-        const m = (s.desc||'').match(/^【([^】]+)】/);
-        const section = m ? m[1] : null;
-        if (section && section !== currentSection) {
-          rows += `<tr class="skill-subhdr"><td colspan="3">▸ ${esc(section)}</td></tr>`;
-          currentSection = section;
-        } else if (!section && currentSection) {
-          currentSection = null;
-        }
-        // 描画時は【...】を除いた説明文を渡す
-        const cleaned = section ? {...s, desc: s.desc.replace(/^【[^】]+】\s*/,'')} : s;
-        rows += renderSkillRow(cleaned);
-      });
-      return `
+    const sections = data.categories.map((cat,i) => `
         <section class="skill-cat" id="skcat-${i}">
           <div class="skill-cat-hdr">
             <span class="skill-cat-icon">${cat.icon||'•'}</span>
             <span class="skill-cat-title">${esc(cat.name)}</span>
             <span class="skill-count">${cat.skills.length} 件</span>
+            <span class="sk-cat-desc">${esc(cat.desc||'')}</span>
           </div>
-          <table class="skill-table">${rows}</table>
-        </section>`;
-    }).join('');
+          <div class="sk-scroll"><table class="sheet">${SK_HEAD}<tbody>${cat.skills.map(renderSkillRow).join('')}</tbody></table></div>
+        </section>`).join('');
 
     el.innerHTML = `
       <div class="skills-wrap">
@@ -883,7 +859,7 @@ async function renderSkills(el) {
           <h3 class="skill-workflow-title">🎯 標準スキルワークフロー</h3>
           <table class="skill-workflow-table">
             <tr>
-              <td class="wf-step">[1] /using-git-worktrees</td>
+              <td class="wf-step">[1] /superpowers:using-git-worktrees</td>
               <td class="wf-label">作業環境の隔離・独立ブランチ作成</td>
             </tr>
             <tr>
@@ -891,7 +867,7 @@ async function renderSkills(el) {
               <td></td>
             </tr>
             <tr>
-              <td class="wf-step">[2] /brainstorming</td>
+              <td class="wf-step">[2] /superpowers:brainstorming</td>
               <td class="wf-label">対話による要件定義・設計の確定</td>
             </tr>
             <tr>
@@ -899,7 +875,7 @@ async function renderSkills(el) {
               <td></td>
             </tr>
             <tr>
-              <td class="wf-step">[3] /writing-plans</td>
+              <td class="wf-step">[3] /superpowers:writing-plans</td>
               <td class="wf-label">2〜5分単位のアトミックなタスク計画作成</td>
             </tr>
             <tr>
@@ -909,9 +885,9 @@ async function renderSkills(el) {
             <tr>
               <td class="wf-step">[4] 実装アプローチ</td>
               <td class="wf-label-choice">
-                <div>通常順次実装：/executing-plans ＋ /test-driven-development (TDD)</div>
-                <div>サブエージェント：/subagent-driven-development</div>
-                <div>大規模並列処理：/dispatching-parallel-agents</div>
+                <div>通常順次実装：/superpowers:executing-plans ＋ /superpowers:test-driven-development (TDD)</div>
+                <div>サブエージェント：/superpowers:subagent-driven-development</div>
+                <div>大規模並列処理：/superpowers:dispatching-parallel-agents</div>
               </td>
             </tr>
             <tr>
@@ -920,7 +896,7 @@ async function renderSkills(el) {
             </tr>
             <tr>
               <td class="wf-step">[5] 不具合発生時</td>
-              <td class="wf-label">/systematic-debugging（4段階デバッグ）</td>
+              <td class="wf-label">/superpowers:systematic-debugging（4段階デバッグ）</td>
             </tr>
             <tr>
               <td class="wf-arrow">↓</td>
@@ -928,7 +904,7 @@ async function renderSkills(el) {
             </tr>
             <tr>
               <td class="wf-step">[6] 完了前検証</td>
-              <td class="wf-label">/verification-before-completion（全テスト・成果物の最終確認）</td>
+              <td class="wf-label">/superpowers:verification-before-completion（全テスト・成果物の最終確認）</td>
             </tr>
             <tr>
               <td class="wf-arrow">↓</td>
@@ -936,121 +912,9 @@ async function renderSkills(el) {
             </tr>
             <tr>
               <td class="wf-step">[7] 完了・統合</td>
-              <td class="wf-label">/finishing-a-development-branch（マージ / PR作成 / cleanup）</td>
+              <td class="wf-label">/superpowers:finishing-a-development-branch（マージ / PR作成 / cleanup）</td>
             </tr>
           </table>
-        </div>
-
-        <!-- ========== 各スキルの解説 ========== -->
-        <div class="skill-guide-section">
-          <h3 class="skill-guide-section-title">📖 各コマンドの解説（カテゴリ別）</h3>
-
-          <div class="skill-guide-cat">
-            <h4 class="skill-guide-cat-title">1️⃣ コアワークフロー</h4>
-            <table class="skill-guide-table">
-              <tr>
-                <td class="sg-name">/brainstorming</td>
-                <td>
-                  <div class="sg-desc"><b>何ができるか：</b> エージェントが一方的にコードを書くのを防ぎ、質問（ソクラテス式対話）を通じて人間の曖昧な要求を具体的な設計仕様書に落とし込みます。</div>
-                  <div class="sg-desc"><b>いつ・どうやって使うか：</b> 開発を開始する最初。コードを書く前の「設計・要件定義フェーズ」で起動します。</div>
-                </td>
-              </tr>
-              <tr>
-                <td class="sg-name">/writing-plans</td>
-                <td>
-                  <div class="sg-desc"><b>何ができるか：</b> 確定した設計をもとに、1タスクあたり「2〜5分で完了できるサイズ」の実行計画書（Markdown）を作成・分解します。</div>
-                  <div class="sg-desc"><b>いつ・どうやって使うか：</b> /brainstorming で設計書が承認された直後。</div>
-                </td>
-              </tr>
-              <tr>
-                <td class="sg-name">/executing-plans</td>
-                <td>
-                  <div class="sg-desc"><b>何ができるか：</b> 作成された実行計画書に従い、タスクを1つずつ順番にコード記述・検証しながら実装を進めます。</div>
-                  <div class="sg-desc"><b>いつ・どうやって使うか：</b> 実行計画書の作成が完了した後。</div>
-                </td>
-              </tr>
-            </table>
-          </div>
-
-          <div class="skill-guide-cat">
-            <h4 class="skill-guide-cat-title">2️⃣ 実装支援</h4>
-            <table class="skill-guide-table">
-              <tr>
-                <td class="sg-name">/test-driven-development</td>
-                <td>
-                  <div class="sg-desc"><b>何ができるか：</b> 「失敗するテストを書く ➔ 最小限のコードで成功させる ➔ リファクタリングする」というTDDの原則を強制します。</div>
-                  <div class="sg-desc"><b>いつ・どうやって使うか：</b> 新規機能の追加やバグ修正コードを記述する際、実装の直前に常に適用します。</div>
-                </td>
-              </tr>
-              <tr>
-                <td class="sg-name">/subagent-driven-development</td>
-                <td>
-                  <div class="sg-desc"><b>何ができるか：</b> 1タスクごとに独立したサブエージェントを立ち上げ、親セッションの文脈（コンテキスト）汚染を防ぎながらタスク単位の実装とレビューを行います。</div>
-                  <div class="sg-desc"><b>いつ・どうやって使うか：</b> コンテキストが長くなりやすい中〜大規模なタスクを実行する時。</div>
-                </td>
-              </tr>
-              <tr>
-                <td class="sg-name">/dispatching-parallel-agents</td>
-                <td>
-                  <div class="sg-desc"><b>何ができるか：</b> 相互に影響しない複数の独立した問題や開発タスクを、別々のサブエージェントに並列同時実行させます。</div>
-                  <div class="sg-desc"><b>いつ・どうやって使うか：</b> 複数の異なるテストファイルが同時に落ちている時や、独立した複数のモジュールを並行開発する時。</div>
-                </td>
-              </tr>
-            </table>
-          </div>
-
-          <div class="skill-guide-cat">
-            <h4 class="skill-guide-cat-title">3️⃣ Git運用</h4>
-            <table class="skill-guide-table">
-              <tr>
-                <td class="sg-name">/using-git-worktrees</td>
-                <td>
-                  <div class="sg-desc"><b>何ができるか：</b> メインの作業環境を汚さずに、<code>git worktree</code> を使って安全に分離された一時的な作業ブランチを自動生成・移行します。</div>
-                  <div class="sg-desc"><b>いつ・どうやって使うか：</b> 新しい機能開発や実験的な実装を開始する一番最初。</div>
-                </td>
-              </tr>
-              <tr>
-                <td class="sg-name">/finishing-a-development-branch</td>
-                <td>
-                  <div class="sg-desc"><b>何ができるか：</b> 全テストの通過を確認し、開発ブランチの main へのマージ、Pull Requestの作成、ワークツリーの安全な削除・クリーンアップを行います。</div>
-                  <div class="sg-desc"><b>いつ・どうやって使うか：</b> すべての実装と検証が完了した最終段階。</div>
-                </td>
-              </tr>
-            </table>
-          </div>
-
-          <div class="skill-guide-cat">
-            <h4 class="skill-guide-cat-title">4️⃣ 品質保証</h4>
-            <table class="skill-guide-table">
-              <tr>
-                <td class="sg-name">/systematic-debugging</td>
-                <td>
-                  <div class="sg-desc"><b>何ができるか：</b> 当て推量によるコード修正を禁止し、「エラー解析 ➔ 再現手順確立 ➔ 仮説検証 ➔ 最小修正」の4段階プロセスで根本原因を突き止めます。</div>
-                  <div class="sg-desc"><b>いつ・どうやって使うか：</b> テストが失敗した時や、予期せぬ不具合が発生した時。</div>
-                </td>
-              </tr>
-              <tr>
-                <td class="sg-name">/verification-before-completion</td>
-                <td>
-                  <div class="sg-desc"><b>何ができるか：</b> 人間に「完了しました」と報告する前に、全テストの実行結果、ビルド確認、仕様適合性を自律的に最終チェックします。</div>
-                  <div class="sg-desc"><b>いつ・どうやって使うか：</b> 全タスクが終了し、作業完了を宣言する直前。</div>
-                </td>
-              </tr>
-            </table>
-          </div>
-
-          <div class="skill-guide-cat">
-            <h4 class="skill-guide-cat-title">5️⃣ レビュー</h4>
-            <table class="skill-guide-table">
-              <tr>
-                <td class="sg-name">requesting-code-review / receiving-code-review</td>
-                <td>
-                  <div class="sg-desc"><b>何ができるか：</b> 記述したコードに対して客観的なコードレビュー（仕様適合・コード品質）を実施し、指摘事項のフィードバックと修正を行います。</div>
-                  <div class="sg-desc"><b>いつ・どうやって使うか：</b> 各タスクの実装後、またはブランチ統合前の確認時。</div>
-                </td>
-              </tr>
-            </table>
-          </div>
         </div>
 
         <!-- ========== 複数案提案 ========== -->
@@ -1062,25 +926,25 @@ async function renderSkills(el) {
             <tr>
               <td class="scenario-name">案1：標準機能開発フロー<br>（最も推奨される基本パターン）</td>
               <td class="scenario-steps">
-                1. /using-git-worktrees ➔ /brainstorming ➔ /writing-plans<br>
-                2. /executing-plans ＋ /test-driven-development で順次実装<br>
-                3. /verification-before-completion ➔ /finishing-a-development-branch
+                1. /superpowers:using-git-worktrees ➔ /superpowers:brainstorming ➔ /superpowers:writing-plans<br>
+                2. /superpowers:executing-plans ＋ /superpowers:test-driven-development で順次実装<br>
+                3. /superpowers:verification-before-completion ➔ /superpowers:finishing-a-development-branch
               </td>
             </tr>
             <tr>
               <td class="scenario-name">案2：大規模機能開発・並列処理フロー</td>
               <td class="scenario-steps">
-                1. /using-git-worktrees ➔ /brainstorming ➔ /writing-plans<br>
-                2. タスク量に応じて /subagent-driven-development または /dispatching-parallel-agents を起動<br>
-                3. /verification-before-completion ➔ /finishing-a-development-branch
+                1. /superpowers:using-git-worktrees ➔ /superpowers:brainstorming ➔ /superpowers:writing-plans<br>
+                2. タスク量に応じて /superpowers:subagent-driven-development または /superpowers:dispatching-parallel-agents を起動<br>
+                3. /superpowers:verification-before-completion ➔ /superpowers:finishing-a-development-branch
               </td>
             </tr>
             <tr>
               <td class="scenario-name">案3：緊急バグ修正・デバッグフロー</td>
               <td class="scenario-steps">
-                1. /using-git-worktrees で調査ブランチ作成<br>
-                2. /systematic-debugging で原因特定 ➔ /test-driven-development で修正<br>
-                3. /verification-before-completion ➔ /finishing-a-development-branch
+                1. /superpowers:using-git-worktrees で調査ブランチ作成<br>
+                2. /superpowers:systematic-debugging で原因特定 ➔ /superpowers:test-driven-development で修正<br>
+                3. /superpowers:verification-before-completion ➔ /superpowers:finishing-a-development-branch
               </td>
             </tr>
           </table>
@@ -1110,16 +974,6 @@ async function renderSkills(el) {
         .wf-label-choice div { padding:2px 0; }
         .wf-arrow { text-align:center; color:var(--gray2); font-size:18px; padding:0; }
         /* ========== 使い方セクション ========== */
-        .skill-guide-section { margin-bottom:16px; }
-        .skill-guide-section-title { font-size:15px; font-weight:bold; color:var(--primary); margin:0 0 12px; }
-        .skill-guide-cat { background:var(--white); border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:10px; }
-        .skill-guide-cat-title { font-size:13px; font-weight:bold; color:var(--secondary); margin:0 0 8px; }
-        .skill-guide-table { width:100%; border-collapse:collapse; font-size:12px; }
-        .skill-guide-table tr { border-bottom:1px solid #f0f0f0; }
-        .skill-guide-table tr:last-child { border-bottom:none; }
-        .sg-name { background:#f9f9f9; color:var(--primary); font-weight:bold; padding:8px; width:180px; vertical-align:top; }
-        .sg-desc { color:var(--gray1); padding:4px 8px; line-height:1.4; }
-        .sg-desc:first-child { padding-top:8px; }
         /* ========== シナリオ提案 ========== */
         .skill-scenarios-panel { background:var(--white); border:1px solid var(--border); border-radius:6px; padding:16px; margin-bottom:16px; }
         .skill-scenarios-title { font-size:15px; font-weight:bold; color:var(--primary); margin:0 0 6px; }
@@ -1141,28 +995,31 @@ async function renderSkills(el) {
         .skill-cat-title { flex:1; font-size:13px; font-weight:bold; color:#fff; }
         .skill-count { font-size:11px; color:rgba(255,255,255,.75); font-weight:bold; }
         /* コンパクト表 */
-        .skill-table { width:100%; border-collapse:collapse; }
-        .skill-table tr { border-bottom:1px solid #F0F0F0; }
-        .skill-table tr:last-child { border-bottom:none; }
-        .skill-table tr:hover { background:#fafafa; }
-        .skill-table td { padding:4px 10px; vertical-align:top; line-height:1.3; }
-        .skill-subhdr td { background:#f5f5f8 !important; color:#555 !important; font-size:11px !important; font-weight:bold; padding:3px 10px !important; border-top:1px solid #e8e8ee; }
-        .skill-subhdr:hover td { background:#f5f5f8 !important; }
-        .skill-td-star { width:24px; padding:4px 0 4px 8px !important; text-align:center; }
         .skill-star { background:none; border:none; cursor:pointer; font-size:16px; line-height:1; color:#cfcfcf; padding:0; font-family:inherit; transition:transform .1s, color .15s; }
         .skill-star:hover { transform:scale(1.2); color:#e6a700; }
         .skill-star.on { color:#ff4d4f; }
-        .skill-td-name { width:200px; white-space:nowrap; }
         .skill-code { background:#e8eef7; color:#2a5599; padding:2px 7px; border-radius:3px; font-size:12px; font-weight:bold; font-family:'SF Mono','Menlo','Consolas',monospace; cursor:text; user-select:text; display:inline-block; }
         .skill-code.important { background:#ffe2e2; color:#c0292b; }
-        .skill-tag { display:inline-block; background:#f3eaea; color:var(--primary); padding:1px 5px; border-radius:3px; font-size:10px; margin-left:4px; font-weight:bold; }
-        .skill-td-desc { font-size:12px; color:var(--gray1); }
+        .sk-scroll { overflow-x:auto; }
+        .sheet { width:100%; min-width:900px; border-collapse:collapse; font-size:13px; }
+        .sheet th, .sheet td { border:1px solid #d0d4d9; padding:6px 8px; vertical-align:top; line-height:1.45; text-align:left; }
+        .sheet thead th { background:#f1f3f4; color:#333; font-weight:bold; white-space:nowrap; position:sticky; top:0; }
+        .sheet tbody tr:nth-child(even) td { background:#fafbfc; }
+        .sheet tbody tr:hover td { background:#fff8e1; }
+        .sk-star { width:32px; text-align:center; }
+        .sk-want { width:17%; font-weight:bold; color:#222; }
+        .sk-cmd { width:22%; }
+        .sk-cmd code { white-space:normal; word-break:break-all; }
+        .sk-desc { width:24%; color:var(--gray1); }
+        .sk-ex { width:25%; color:#333; user-select:text; }
+        .sk-kind { width:9%; font-size:11px; color:var(--gray1); }
+        .sk-cat-desc { font-size:11px; color:rgba(255,255,255,.85); margin-left:10px; }
         /* 重要セクション */
         .skill-cat-important .skill-cat-hdr { background:linear-gradient(180deg,#ff4d4f,#d9363e); }
         .skills-footer { margin-top:12px; padding:10px 14px; background:var(--white); border:1px solid var(--border); border-radius:6px; font-size:12px; color:var(--gray2); }
         .skills-footer code { background:#f3eaea; color:var(--primary); padding:2px 6px; border-radius:3px; font-family:'SF Mono','Menlo','Consolas',monospace; }
         /* 使い方パネル */
-        @media (max-width:600px) { .skill-td-name { width:130px; } .skills-h2 { font-size:16px; } }
+        @media (max-width:600px) { .skills-h2 { font-size:16px; } }
       </style>`;
   } catch(e) {
     el.innerHTML = '<div style="padding:24px;color:#c33">読み込みエラー: ' + esc(e.message) + '</div>';
