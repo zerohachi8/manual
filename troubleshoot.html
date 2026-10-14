@@ -175,8 +175,57 @@ footer {
   </ul>
 </div>
 
+<!-- ============ GOOGLE WORKSPACE MCP / AGENTIC OAUTH ============ -->
+<div class="card">
+  <h2>Google Workspace MCP：OAuth クライアントを「AIエージェント」にする（期限 2026-11-11）</h2>
+  <p>Google から「【対応必須】2026年11月11日までに Google Workspace MCP の AI エージェント OAuth クライアントをエージェントとしてマークしてください」というメールが届いたときの対応手順。</p>
+
+  <h3>📅 スケジュール</h3>
+  <table>
+    <thead>
+      <tr><th style="width:28%">日付</th><th>内容</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>2026-10-12</td><td>Google Cloud コンソールでクライアントを「エージェント」にできるようになる</td></tr>
+      <tr><td><strong>2026-11-11</strong></td><td>エージェント指定のないクライアントからの Workspace MCP 呼び出しを拒否（エラー：クライアントが AI エージェントとしてマークされていません）</td></tr>
+      <tr><td>2026-11-12</td><td>設定が固定。以後の変更は新しい OAuth クライアント ID の作成が必要</td></tr>
+    </tbody>
+  </table>
+
+  <h3>🔎 対応が必要かの判断</h3>
+  <ul>
+    <li>Claude などの AI から Workspace MCP（Gmail／Drive／Calendar）に接続する OAuth クライアントがある → <strong>対応必要</strong></li>
+    <li>Gmail API／Drive API などの REST API のみ使っている → <strong>対応不要</strong></li>
+    <li>人間用アプリと AI 用を同じクライアントで共用している → エージェント用に<strong>別クライアントを新規作成</strong>（公式推奨）</li>
+  </ul>
+
+  <h3><span class="tag tag-step">手順</span>チェックを入れる</h3>
+  <ol>
+    <li><a href="https://console.cloud.google.com/auth/clients">Google Cloud コンソール</a>を開き、対象プロジェクトを選択</li>
+    <li><strong>Google Auth Platform → クライアント</strong> で対象の OAuth クライアントを開く</li>
+    <li><strong>Use this client for an AI-powered agent</strong> にチェック</li>
+    <li>「保存」→ 確認ダイアログ <strong>Change AI agent classification?</strong> で「保存」</li>
+    <li>トースト「OAuth クライアントを保存しました」を確認 → ページを再読み込みしてチェックが残っていることを確認</li>
+  </ol>
+
+  <div class="callout">
+    <strong>⚠️ 注意</strong><br>
+    ・保存は<strong>ダイアログの「保存」まで押して初めて確定</strong>。画面が ON でも、ダイアログ未確定だと再読み込みで OFF に戻る<br>
+    ・MCP 側で有効になるまで 5 分〜数時間かかる場合あり<br>
+    ・チェックを入れても、スコープや権限は増えない（自己申告の分類のみ）<br>
+    ・2026-11-12 以降は変更不可。変える場合は新しいクライアント ID を作成
+  </div>
+
+  <h3>🔍 実施記録（2026-10-14）</h3>
+  <ul>
+    <li>プロジェクト：<code>itoai1</code>（メールでは「itoi1」表記）／クライアント：<code>itoai1</code>（デスクトップ型・1件のみ）</li>
+    <li>チェックを入れて保存し、再読み込みで ON を確認</li>
+    <li>参考：<a href="https://support.google.com/cloud/answer/15549257">OAuth クライアントの管理（Google）</a>／<a href="https://developers.google.com/workspace/guides/configure-mcp-servers">Workspace MCP サーバーの設定（Google）</a></li>
+  </ul>
+</div>
+
 <footer>
-  ゼロハチ株式会社マニュアル｜最終更新：2026-07-03
+  ゼロハチ株式会社マニュアル｜最終更新：2026-10-14
 </footer>
 
 </div>
