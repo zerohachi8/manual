@@ -224,8 +224,19 @@ footer {
   </ul>
 </div>
 
+<!-- ============ SESSION AUTO TITLE ============ -->
+<div class="card">
+  <h2>セッションタイトルの自動設定</h2>
+  <p>「新規作成」を押して最初の依頼を送ると、Claude が <code>【区分】説明_MMDD</code> と参照先を付ける。区分は【FJ】【仕事】【管理】の3つ。それ以外の依頼では付けない。再開したセッションでは変更しない。</p>
+
+  <div class="callout">
+    <strong>⚠️ 付かない時</strong><br>
+    <code>~/.claude/hooks/require-spec-confirmation.sh</code> と <code>~/.claude/CLAUDE.md</code>「セッションタイトル自動設定」を確認する
+  </div>
+</div>
+
 <footer>
-  ゼロハチ株式会社マニュアル｜最終更新：2026-10-14
+  ゼロハチ株式会社マニュアル｜最終更新：2026-10-30
 </footer>
 
 </div>
