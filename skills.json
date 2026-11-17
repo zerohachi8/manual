@@ -348,6 +348,13 @@
           "desc": "やること・次にやること・いつかやることに分けて、優先順位を整えます。",
           "example": "/product-management:roadmap-update 今期の施策を Now / Next / Later に整理して",
           "kind": "追加機能（プラグイン）"
+        },
+        {
+          "name": "/research",
+          "want": "きちんと調べてから答えてほしい",
+          "desc": "Memory・手順書（~/.claude/docs）・このマニュアルを確認したあとで、Web を2件以上（公式を優先）調べます。食い違いを確かめてから、結論と表で答え、最後に情報源（Sources）を付けます。ファイルは変更しません。「調べて」「リサーチ」と書くと自動で働きます。",
+          "example": "/research Gmail の下書きに添付できるファイルの上限は？",
+          "kind": "自作"
         }
       ]
     },
